@@ -64,6 +64,132 @@ function init() {
     initTimers();
     loadHighScore();
     calculateLead();
+
+    // API Call
+    // fetchShipsFromAPI(); // Disabled in favor of static ships.js which includes AttackerDB
+}
+
+const API_APP_ID = "958ff05fbaa850b4c2bd0d171eb7e9cc";
+const API_BASE_URL = "https://api.worldofwarships.eu/wows/encyclopedia/ships/";
+
+async function fetchShipsFromAPI() {
+    console.log("Fetching ships from Wargaming API...");
+    // Update UI to show loading state if you want, or just log
+
+    let allShips = [];
+    let pageNo = 1;
+    const limit = 100;
+
+    try {
+        while (true) {
+            const url = `${API_BASE_URL}?application_id=${API_APP_ID}&limit=${limit}&page_no=${pageNo}&fields=name,tier,type,nation,default_profile.speed_in_knots,default_profile.mobility.speed,images.small,is_premium,is_special`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error("API Request Failed:", response.status, response.statusText);
+                break;
+            }
+
+            const data = await response.json();
+
+            if (data.status !== "ok" || !data.data) {
+                console.error("API Error:", data.error);
+                break;
+            }
+
+            const pageShips = Object.values(data.data);
+            if (pageShips.length === 0) break; // No more data
+
+            allShips = allShips.concat(pageShips);
+
+            // Check meta for total pages if available, or just rely on empty count
+            if (data.meta && data.meta.page_total && pageNo >= data.meta.page_total) {
+                break;
+            }
+
+            pageNo++;
+        }
+
+        console.log(`Fetched ${allShips.length} ships from API.`);
+
+        // Transform and Update Database
+        if (allShips.length > 0) {
+            const transformedShips = allShips.map(ship => {
+                // Determine Speed
+                // API 1: default_profile.speed_in_knots (deprecated or specific)
+                // API 2: default_profile.mobility.speed
+                // Fallback to 30 if null (common for submarines/cvs sometimes not fully profiled in basic endpoint)
+                let speed = 0;
+                if (ship.default_profile && ship.default_profile.mobility) {
+                    speed = ship.default_profile.mobility.speed;
+                }
+
+                // Map API Types to Our Types
+                // API: "Destroyer", "Cruiser", "Battleship", "AirCarrier", "Submarine"
+                // Our: "DD", "CA", "BB", "CV", "SUB"
+                const typeMap = {
+                    "Destroyer": "DD",
+                    "Cruiser": "CA",
+                    "Battleship": "BB",
+                    "AirCarrier": "CV",
+                    "Submarine": "SUB"
+                };
+
+                let myType = typeMap[ship.type] || "Other";
+
+                // Map Nations (Capitalize 1st letter usually works, but ensure match)
+                // API: "japan", "usa", "ussr", "germany", "uk", "france", "italy", "pan_asia", "commonwealth", "pan_america", "europe", "netherlands", "spain"
+                // Our Filter: ["Japan", "USA", "Germany", "USSR", "UK", "France", "Italy", "Pan-Asia", "Other"]
+                // We should format nation to Title Case.
+                let nation = ship.nation.charAt(0).toUpperCase() + ship.nation.slice(1);
+                if (nation === "Usa") nation = "USA";
+                if (nation === "Ussr") nation = "USSR";
+                if (nation === "Uk") nation = "UK";
+                if (nation === "Pan_asia") nation = "Pan-Asia";
+
+                return {
+                    name: ship.name,
+                    speed: speed,
+                    type: myType,
+                    nation: nation,
+                    tier: String(ship.tier), // API returns number, we use string in filters sometimes
+                    is_premium: ship.is_premium || ship.is_special
+                };
+            }).filter(s => s.speed > 0); // Filter out entities with no speed (like auxiliary or error)
+
+            // Update Global Database
+            // Optional: Merge with existing or Replace?
+            // Strategy: Replace the static list entirely with the API list for "live" data.
+            // But let's keep the custom ones? For now, let's just REPLACE `shipDatabase` content but keep reference.
+
+            // Clear existing static data (optional, maybe we want to keep it if API fails? But here we are in success block)
+            shipDatabase.length = 0;
+            transformedShips.forEach(s => shipDatabase.push(s));
+
+            // Also populate AttackerDB? 
+            // AttackerDB needs 'velocity' (shell velocity), which is NOT in the basic ship info.
+            // Getting shell velocity requires querying 'artillery' module details which is a deep separate call per ship.
+            // For now, we ONLY update target ships (shipDatabase) as requested.
+
+            // Re-populate Selectors
+            populateSelectors('target');
+
+            console.log("Database updated.");
+
+            // Provide visual feedback
+            const countStr = `API'den ${transformedShips.length} gemi yüklendi.`;
+            const header = document.querySelector('.modal-header h3');
+            if (header) header.setAttribute('title', countStr); // subtly add info
+
+            // Or use a toast? For now console is fine + UI update.
+            // Maybe update the "Custom" option text to show total count?
+            const defaultOpt = shipSelector.querySelector('option[value="custom"]');
+            if (defaultOpt) defaultOpt.textContent = `DÜŞMAN GEMİSİNİ SEÇ (${transformedShips.length})`;
+        }
+
+    } catch (err) {
+        console.error("Failed to fetch ships:", err);
+    }
 }
 
 function initFilters() {
