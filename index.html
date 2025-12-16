@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoW Nişan Yardımcısı & Önleme Hesaplayıcı</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>⚓ WoW Nişan Yardımcısı</h1>
+            <nav>
+                <button class="nav-btn active" data-tab="calculator">Önleme (Lead) Hesaplayıcı</button>
+                <button class="nav-btn" data-tab="simulation">Eğitim Simülasyonu</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- CALCULATOR SECTION -->
+            <section id="calculator" class="tab-content active">
+                <div class="card">
+                    <h2>🎯 Önleme (Lead) Hesaplayıcı</h2>
+                    <p class="description">Gemi hızı, mesafe ve açıya göre nişan noktasını hesaplar.</p>
+
+                    <div class="calc-grid">
+                        <!-- LEFT COLUMN: Attacker Info -->
+                        <div class="grid-col">
+                            <h3>🔵 Sizin Geminiz</h3>
+                            <div class="input-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="attacker-selector">Gemini Seç</label>
+                                    <button id="open-attacker-filter-btn" class="action-btn small secondary"
+                                        style="margin: 0; padding: 4px 10px; font-size: 0.8rem;">🔍 Filtrele</button>
+                                </div>
+                                <select id="attacker-selector">
+                                    <option value="custom">GEMİNİ SEÇ</option>
+                                    <!-- Options by JS -->
+                                </select>
+                            </div>
+
+                            <div class="input-group range-group">
+                                <label for="target-distance">Mesafe (km) <span id="dist-val">15.0</span></label>
+                                <div class="range-container">
+                                    <input type="range" id="dist-slider" min="1" max="30" step="0.1" value="15">
+                                    <input type="number" id="target-distance" placeholder="15.0" step="0.1" min="0"
+                                        max="40" value="15">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="scale-factor">Ölçek (Nişangah)</label>
+                                <input type="number" id="scale-factor" value="1.0" step="0.1">
+                            </div>
+                        </div>
+
+                        <!-- RIGHT COLUMN: Target Info -->
+                        <div class="grid-col">
+                            <h3>🔴 Düşman Gemisi</h3>
+                            <div class="input-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="ship-selector">Düşman Seç</label>
+                                    <button id="open-filter-btn" class="action-btn small secondary"
+                                        style="margin: 0; padding: 4px 10px; font-size: 0.8rem;">🔍 Filtrele</button>
+                                </div>
+                                <select id="ship-selector">
+                                    <option value="custom">DÜŞMAN GEMİSİNİ SEÇ</option>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+
+                            <div class="input-group range-group">
+                                <label for="target-speed">Hız (knot) <span id="speed-val">30</span></label>
+                                <div class="range-container">
+                                    <input type="range" id="speed-slider" min="0" max="60" step="1" value="30">
+                                    <input type="number" id="target-speed" placeholder="30" min="0" max="60" value="30">
+                                </div>
+                            </div>
+
+                            <div class="input-group range-group">
+                                <label for="angle-slider">Açı: <span id="angle-val">90</span>°</label>
+                                <input type="range" id="angle-slider" min="0" max="90" step="5" value="90">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FULL WIDTH INFO -->
+                    <div class="flight-info-bar">
+                        <label for="flight-time">⏱️ Uçuş Süresi:</label>
+                        <input type="number" id="flight-time" placeholder="Hesaplanıyor..." step="0.1" readonly>
+                        <span>saniye</span>
+                    </div>
+
+                    <!-- RESULT -->
+                    <div class="result-box">
+                        <h3>Nişan Alman Gereken Yer:</h3>
+                        <span id="result-value">--</span>
+                        <span class="unit">Tick (Birim)</span>
+                    </div>
+
+                    <!-- TIMERS -->
+                    <div class="timers-section">
+                        <h4>⏱️ Taktik Zamanlayıcılar</h4>
+                        <div class="timer-grid">
+                            <button id="smoke-timer-btn" class="timer-btn">💨 Duman (45s)</button>
+                            <button id="spotter-timer-btn" class="timer-btn">✈️ Uçak (60s)</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SIMULATION SECTION -->
+            <section id="simulation" class="tab-content">
+                <div class="simulation-container">
+                    <div class="sim-controls">
+                        <div class="control-item">
+                            <span id="sim-high-score" style="color: #f59e0b;">En İyi: 0</span>
+                        </div>
+                        <div class="control-item">
+                            <span id="sim-score">Puan: 0</span>
+                        </div>
+                        <div class="control-item">
+                            <span id="sim-misses">Iskalar: 0</span>
+                        </div>
+                        <button id="toggle-view-btn" class="action-btn small secondary"
+                            title="Harita / Normal Görünüm">🗺️ Harita</button>
+                        <button id="start-sim-btn" class="action-btn small">Başla</button>
+                        <button id="reset-sim-btn" class="action-btn small secondary">Sıfırla</button>
+                    </div>
+                    <canvas id="aim-canvas" width="800" height="400"></canvas>
+                    <div class="sim-feedback">
+                        <p>Önleme vererek ateş etmek için ekrana tıkla!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>WoW Aim Trainer - Eğitim Aracı</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">Bu sayfa <strong>depotkedi</strong>
+                tarafından yapılmıştır. Geliştirilmeye devam etmektedir.</p>
+        </footer>
+    </div>
+    <!-- FILTER MODAL -->
+    <div id="filter-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔍 Gemi Filtresi</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+
+            <div class="filter-group">
+                <h4>Gemi Sınıfı</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="type" value="DD" checked> DD (Destroyer)</label>
+                    <label><input type="checkbox" name="type" value="CA" checked> CA/CL (Cruiser)</label>
+                    <label><input type="checkbox" name="type" value="BB" checked> BB (Battleship)</label>
+                    <label><input type="checkbox" name="type" value="CV" checked> CV (Carrier)</label>
+                    <label><input type="checkbox" name="type" value="SUB" checked> SUB (Submarine)</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Ülke</h4>
+                <div class="checkbox-group grid-2">
+                    <label><input type="checkbox" name="nation" value="Japan" checked> Japan</label>
+                    <label><input type="checkbox" name="nation" value="USA" checked> U.S.A.</label>
+                    <label><input type="checkbox" name="nation" value="Germany" checked> Germany</label>
+                    <label><input type="checkbox" name="nation" value="USSR" checked> U.S.S.R.</label>
+                    <label><input type="checkbox" name="nation" value="UK" checked> U.K.</label>
+                    <label><input type="checkbox" name="nation" value="France" checked> France</label>
+                    <label><input type="checkbox" name="nation" value="Italy" checked> Italy</label>
+                    <label><input type="checkbox" name="nation" value="Pan-Asia" checked> Pan-Asia</label>
+                    <label><input type="checkbox" name="nation" value="Other" checked> Diğer</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Seviye (Tier)</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="tier" value="11" checked> ★ (Supership)</label>
+                    <label><input type="checkbox" name="tier" value="10" checked> Tier X</label>
+                    <label><input type="checkbox" name="tier" value="9" checked> Tier IX</label>
+                    <label><input type="checkbox" name="tier" value="8" checked> Tier VIII</label>
+                    <label><input type="checkbox" name="tier" value="Other" checked> Diğer</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="apply-filters-btn" class="action-btn">Uygula ve Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD SHIP MODAL -->
+    <div id="add-ship-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ Özel Gemi Ekle</h3>
+                <span class="close-add-modal"
+                    style="color: #94a3b8; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            </div>
+
+            <div class="filter-group">
+                <div class="input-group">
+                    <label>Gemi Adı</label>
+                    <input type="text" id="new-ship-name" placeholder="Örn: Yamato B"
+                        style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                </div>
+
+                <div class="calc-grid" style="margin-bottom: 0;">
+                    <div class="input-group">
+                        <label>Hız (Speed)</label>
+                        <input type="number" id="new-ship-speed" placeholder="30"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Sınıf</label>
+                        <select id="new-ship-type"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="BB">BB (Battleship)</option>
+                            <option value="CA">CA (Cruiser)</option>
+                            <option value="DD">DD (Destroyer)</option>
+                            <option value="CV">CV (Carrier)</option>
+                            <option value="SUB">SUB (Submarine)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-grid" style="margin-bottom: 0;">
+                    <div class="input-group">
+                        <label>Ülke</label>
+                        <select id="new-ship-nation"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="Japan">Japonya</option>
+                            <option value="USA">ABD</option>
+                            <option value="Germany">Almanya</option>
+                            <option value="USSR">SSCB</option>
+                            <option value="UK">İngiltere</option>
+                            <option value="France">Fransa</option>
+                            <option value="Italy">İtalya</option>
+                            <option value="Pan-Asia">Pan-Asya</option>
+                            <option value="Other">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Seviye (Tier)</label>
+                        <select id="new-ship-tier"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="11">★ (Supership)</option>
+                            <option value="10" selected>Tier 10</option>
+                            <option value="9">Tier 9</option>
+                            <option value="8">Tier 8</option>
+                            <option value="Other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="save-new-ship-btn" class="action-btn">Kaydet ve Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Adding Ship -->
+    <button id="open-add-ship-btn" class="action-btn small" title="Özel Gemi Ekle"
+        style="position: fixed; bottom: 20px; right: 20px; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 999; display: flex; align-items: center; justify-content: center;">➕</button>
+
+    <script src="ships.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
