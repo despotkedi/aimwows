@@ -12,10 +12,20 @@
 <body>
     <div class="app-container">
         <header>
-            <h1>⚓ WoW Nişan Yardımcısı</h1>
+            <h1 data-i18n="app-title">⚓ Mermi Uçuş Süresi Hesaplayıcı</h1>
+            <div class="lang-container">
+                <select id="lang-selector">
+                    <option value="tr">🇹🇷 TR</option>
+                    <option value="en">🇺🇸 EN</option>
+                    <option value="it">🇮🇹 IT</option>
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="ru">🇷🇺 RU</option>
+                </select>
+            </div>
             <nav>
-                <button class="nav-btn active" data-tab="calculator">Önleme (Lead) Hesaplayıcı</button>
-                <button class="nav-btn" data-tab="simulation">Eğitim Simülasyonu</button>
+                <button class="nav-btn active" data-tab="calculator" data-i18n="nav-calc">Önleme (Lead)
+                    Hesaplayıcı</button>
+                <button class="nav-btn" data-tab="simulation" data-i18n="nav-sim">Eğitim Simülasyonu</button>
             </nav>
         </header>
 
@@ -23,16 +33,17 @@
             <!-- CALCULATOR SECTION -->
             <section id="calculator" class="tab-content active">
                 <div class="card">
-                    <h2>🎯 Önleme (Lead) Hesaplayıcı</h2>
-                    <p class="description">Gemi hızı, mesafe ve açıya göre nişan noktasını hesaplar.</p>
+                    <h2 data-i18n="calc-title">🎯 Mermi Uçuş Süresi Hesaplayıcı</h2>
+                    <p class="description" data-i18n="calc-desc">Gemi hızı, mesafe ve açıya göre nişan noktasını
+                        hesaplar.</p>
 
                     <div class="calc-grid">
                         <!-- LEFT COLUMN: Attacker Info -->
                         <div class="grid-col">
-                            <h3>🔵 Sizin Geminiz</h3>
+                            <h3 data-i18n="attacker-title">🔵 Sizin Geminiz</h3>
                             <div class="input-group">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <label for="attacker-selector">Gemini Seç</label>
+                                    <label for="attacker-selector" data-i18n="label-select-ship">Gemini Seç</label>
                                     <button id="open-attacker-filter-btn" class="action-btn small secondary"
                                         style="margin: 0; padding: 4px 10px; font-size: 0.8rem;">🔍 Filtrele</button>
                                 </div>
@@ -43,7 +54,8 @@
                             </div>
 
                             <div class="input-group range-group">
-                                <label for="target-distance">Mesafe (km) <span id="dist-val">15.0</span></label>
+                                <label for="target-distance"><span data-i18n="label-distance">Mesafe</span> (km) <span
+                                        id="dist-val">15.0</span></label>
                                 <div class="range-container">
                                     <input type="range" id="dist-slider" min="1" max="30" step="0.1" value="15">
                                     <input type="number" id="target-distance" placeholder="15.0" step="0.1" min="0"
@@ -52,17 +64,17 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="scale-factor">Ölçek (Nişangah)</label>
+                                <label for="scale-factor" data-i18n="label-scale">Ölçek (Nişangah)</label>
                                 <input type="number" id="scale-factor" value="1.0" step="0.1">
                             </div>
                         </div>
 
                         <!-- RIGHT COLUMN: Target Info -->
                         <div class="grid-col">
-                            <h3>🔴 Düşman Gemisi</h3>
+                            <h3 data-i18n="target-title">🔴 Düşman Gemisi</h3>
                             <div class="input-group">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <label for="ship-selector">Düşman Seç</label>
+                                    <label for="ship-selector" data-i18n="label-select-target">Düşman Seç</label>
                                     <button id="open-filter-btn" class="action-btn small secondary"
                                         style="margin: 0; padding: 4px 10px; font-size: 0.8rem;">🔍 Filtrele</button>
                                 </div>
@@ -73,7 +85,8 @@
                             </div>
 
                             <div class="input-group range-group">
-                                <label for="target-speed">Hız (knot) <span id="speed-val">30</span></label>
+                                <label for="target-speed"><span data-i18n="label-speed">Hız</span> (knot) <span
+                                        id="speed-val">30</span></label>
                                 <div class="range-container">
                                     <input type="range" id="speed-slider" min="0" max="60" step="1" value="30">
                                     <input type="number" id="target-speed" placeholder="30" min="0" max="60" value="30">
@@ -81,7 +94,8 @@
                             </div>
 
                             <div class="input-group range-group">
-                                <label for="angle-slider">Açı: <span id="angle-val">90</span>°</label>
+                                <label for="angle-slider"><span data-i18n="label-angle">Açı</span>: <span
+                                        id="angle-val">90</span>°</label>
                                 <input type="range" id="angle-slider" min="0" max="90" step="5" value="90">
                             </div>
                         </div>
@@ -89,24 +103,25 @@
 
                     <!-- FULL WIDTH INFO -->
                     <div class="flight-info-bar">
-                        <label for="flight-time">⏱️ Uçuş Süresi:</label>
+                        <label for="flight-time" data-i18n="label-flight-time">⏱️ Uçuş Süresi:</label>
                         <input type="number" id="flight-time" placeholder="Hesaplanıyor..." step="0.1" readonly>
-                        <span>saniye</span>
+                        <span data-i18n="unit-seconds">saniye</span>
                     </div>
 
                     <!-- RESULT -->
                     <div class="result-box">
-                        <h3>Nişan Alman Gereken Yer:</h3>
+                        <h3 data-i18n="result-title">Nişan Alman Gereken Yer:</h3>
                         <span id="result-value">--</span>
-                        <span class="unit">Tick (Birim)</span>
+                        <span class="unit" data-i18n="unit-tick">Tick (Birim)</span>
                     </div>
 
                     <!-- TIMERS -->
                     <div class="timers-section">
-                        <h4>⏱️ Taktik Zamanlayıcılar</h4>
+                        <h4 data-i18n="timers-title">⏱️ Taktik Zamanlayıcılar</h4>
                         <div class="timer-grid">
-                            <button id="smoke-timer-btn" class="timer-btn">💨 Duman (45s)</button>
-                            <button id="spotter-timer-btn" class="timer-btn">✈️ Uçak (60s)</button>
+                            <button id="smoke-timer-btn" class="timer-btn" data-i18n="btn-smoke">💨 Duman (45s)</button>
+                            <button id="spotter-timer-btn" class="timer-btn" data-i18n="btn-spotter">✈️ Uçak
+                                (60s)</button>
                         </div>
                     </div>
                 </div>
@@ -132,15 +147,16 @@
                     </div>
                     <canvas id="aim-canvas" width="800" height="400"></canvas>
                     <div class="sim-feedback">
-                        <p>Önleme vererek ateş etmek için ekrana tıkla!</p>
+                        <p data-i18n="sim-instruction">Önleme vererek ateş etmek için ekrana tıkla!</p>
                     </div>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>WoW Aim Trainer - Eğitim Aracı</p>
-            <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">Bu sayfa <strong>depotkedi</strong>
+            <p data-i18n="footer-text">WoW Aim Trainer - Eğitim Aracı</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;" data-i18n="footer-credits">Bu sayfa
+                <strong>depotkedi</strong>
                 tarafından yapılmıştır. Geliştirilmeye devam etmektedir.</p>
         </footer>
     </div>
