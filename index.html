@@ -197,6 +197,9 @@
                                             style="margin: 0; padding: 4px 10px; font-size: 0.8rem;"
                                             data-i18n="btn-filter">🔍 Filtrele</button>
                                     </div>
+                                    <input type="text" id="attacker-search" class="ship-search-input"
+                                        data-i18n-placeholder="placeholder-search"
+                                        style="width: 100%; margin: 5px 0; padding: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px;">
                                     <select id="attacker-selector">
                                         <option value="custom">GEMİNİ SEÇ</option>
                                         <!-- Options by JS -->
@@ -229,6 +232,9 @@
                                             style="margin: 0; padding: 4px 10px; font-size: 0.8rem;"
                                             data-i18n="btn-filter">🔍 Filtrele</button>
                                     </div>
+                                    <input type="text" id="target-search" class="ship-search-input"
+                                        data-i18n-placeholder="placeholder-search"
+                                        style="width: 100%; margin: 5px 0; padding: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px;">
                                     <select id="ship-selector">
                                         <option value="custom">DÜŞMAN GEMİSİNİ SEÇ</option>
                                         <!-- Options will be populated by JS -->
@@ -313,28 +319,32 @@
                 <div class="simulation-container">
                     <!-- SCENARIO INFO OVERLAY -->
                     <div id="scenario-info" class="scenario-panel" style="display: none;">
-                        <h3>📋 GÖREV</h3>
+                        <h3 data-i18n="sim-task">📋 GÖREV</h3>
                         <div class="scenario-details">
-                            <p>🎯 Mesafe: <span id="sc-dist" class="val">--</span> km</p>
-                            <p>🚄 Hız: <span id="sc-speed" class="val">--</span> kts</p>
-                            <p>⏱️ Uçuş Süresi: <span id="sc-time" class="val">--</span> s</p>
+                            <p><span data-i18n="sim-distance">🎯 Mesafe</span>: <span id="sc-dist" class="val">--</span>
+                                km</p>
+                            <p><span data-i18n="sim-speed">🚄 Hız</span>: <span id="sc-speed" class="val">--</span> kts
+                            </p>
+                            <p><span data-i18n="sim-time">⏱️ Uçuş Süresi</span>: <span id="sc-time"
+                                    class="val">--</span> s</p>
                         </div>
-                        <div class="hint-text">Bu değerlere göre nişan al!</div>
+                        <div class="hint-text" data-i18n="sim-hint">Bu değerlere göre nişan al!</div>
                     </div>
                     <div class="sim-controls">
                         <div class="control-item">
-                            <span id="sim-high-score" style="color: #f59e0b;">En İyi: 0</span>
+                            <span id="sim-high-score" style="color: #f59e0b;" data-i18n="sim-highscore">En İyi: 0</span>
                         </div>
                         <div class="control-item">
-                            <span id="sim-score">Puan: 0</span>
+                            <span id="sim-score" data-i18n="sim-score">Puan: 0</span>
                         </div>
                         <div class="control-item">
-                            <span id="sim-misses">Iskalar: 0</span>
+                            <span id="sim-misses" data-i18n="sim-misses">Iskalar: 0</span>
                         </div>
-                        <button id="toggle-view-btn" class="action-btn small secondary"
-                            title="Harita / Normal Görünüm">🗺️ Harita</button>
-                        <button id="start-sim-btn" class="action-btn small">Başla</button>
-                        <button id="reset-sim-btn" class="action-btn small secondary">Sıfırla</button>
+                        <button id="toggle-view-btn" class="action-btn small secondary" title="Harita / Normal Görünüm"
+                            data-i18n="btn-map">🗺️ Harita</button>
+                        <button id="start-sim-btn" class="action-btn small" data-i18n="btn-start">Başla</button>
+                        <button id="reset-sim-btn" class="action-btn small secondary"
+                            data-i18n="btn-reset">Sıfırla</button>
                     </div>
                     <canvas id="aim-canvas" width="800" height="400"></canvas>
                     <div class="sim-feedback">

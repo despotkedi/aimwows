@@ -102,8 +102,8 @@ const translations = {
         "unit-seconds": "saniye",
         "unit-tick": "Tick (Birim)",
         "unit-knot": "knot",
-        "unit-knot": "knot",
         "btn-filter": "🔍 Filtrele",
+        "placeholder-search": "🔍 Ara...",
         "btn-test-shot": "🧪 Bu Atışı Test Et",
         "sim-instruction": "Önleme vererek ateş etmek için ekrana tıkla!",
         "footer-text": "WoW Aim Trainer - Eğitim Aracı",
@@ -117,7 +117,20 @@ const translations = {
         "default-option-target": "DÜŞMAN GEMİSİNİ SEÇ",
         "placeholder-calculating": "Hesaplanıyor...",
         "credits-pre": "Bu sayfa",
-        "credits-post": "tarafından yapılmıştır. Geliştirilmeye devam etmektedir."
+        "credits-post": "tarafından yapılmıştır. Geliştirilmeye devam etmektedir.",
+        // SIMULATION UI
+        "sim-task": "📋 GÖREV",
+        "sim-distance": "🎯 Mesafe",
+        "sim-speed": "🚄 Hız",
+        "sim-time": "⏱️ Uçuş Süresi",
+        "sim-hint": "Bu değerlere göre nişan al!",
+        "sim-highscore": "En İyi:",
+        "sim-score": "Puan:",
+        "sim-misses": "Iskalar:",
+        "btn-map": "🗺️ Harita",
+        "btn-norm": "⚓ Normal Mod",
+        "btn-start": "Başla",
+        "btn-reset": "Sıfırla"
     },
     en: {
         "app-title": "WORLD OF WARSHIPS AIM CALCULATOR",
@@ -138,8 +151,8 @@ const translations = {
         "unit-seconds": "seconds",
         "unit-tick": "Ticks",
         "unit-knot": "knots",
-        "unit-knot": "knots",
         "btn-filter": "🔍 Filter",
+        "placeholder-search": "🔍 Search...",
         "btn-test-shot": "🧪 Test This Shot",
         "sim-instruction": "Click on screen to shoot with lead!",
         "footer-text": "WoW Aim Trainer - Educational Tool",
@@ -153,7 +166,20 @@ const translations = {
         "default-option-target": "SELECT ENEMY",
         "placeholder-calculating": "Calculating...",
         "credits-pre": "This page was made by",
-        "credits-post": ". Development is ongoing."
+        "credits-post": ". Development is ongoing.",
+        // SIMULATION UI
+        "sim-task": "📋 TASK",
+        "sim-distance": "🎯 Distance",
+        "sim-speed": "🚄 Speed",
+        "sim-time": "⏱️ Flight Time",
+        "sim-hint": "Aim based on these values!",
+        "sim-highscore": "Best:",
+        "sim-score": "Score:",
+        "sim-misses": "Misses:",
+        "btn-map": "🗺️ Map Mode",
+        "btn-norm": "⚓ Normal Mode",
+        "btn-start": "Start",
+        "btn-reset": "Reset"
     },
     it: {
         "app-title": "Calcolatore di Tiro World of Warships",
@@ -174,8 +200,8 @@ const translations = {
         "unit-seconds": "secondi",
         "unit-tick": "Tacche",
         "unit-knot": "nodi",
-        "unit-knot": "nodi",
         "btn-filter": "🔍 Filtra",
+        "placeholder-search": "🔍 Cerca...",
         "btn-test-shot": "🧪 Prova Questo Colpo",
         "sim-instruction": "Clicca sullo schermo per sparare con anticipo!",
         "footer-text": "WoW Aim Trainer - Strumento Educativo",
@@ -189,7 +215,20 @@ const translations = {
         "default-option-target": "SELEZIONA NEMICO",
         "placeholder-calculating": "Calcolo...",
         "credits-pre": "Questa pagina è stata creata da",
-        "credits-post": ". Lo sviluppo è in corso."
+        "credits-post": ". Lo sviluppo è in corso.",
+        // SIMULATION UI
+        "sim-task": "📋 MISSIONE",
+        "sim-distance": "🎯 Distanza",
+        "sim-speed": "🚄 Velocità",
+        "sim-time": "⏱️ Tempo Volo",
+        "sim-hint": "Mira in base a questi valori!",
+        "sim-highscore": "Migliore:",
+        "sim-score": "Punteggio:",
+        "sim-misses": "Errori:",
+        "btn-map": "🗺️ Mappa",
+        "btn-norm": "⚓ Normale",
+        "btn-start": "Inizia",
+        "btn-reset": "Resetta"
     },
     de: {
         "app-title": "World of Warships Zielrechner",
@@ -211,6 +250,7 @@ const translations = {
         "unit-tick": "Striche",
         "unit-knot": "Knoten",
         "btn-filter": "🔍 Filter",
+        "placeholder-search": "🔍 Suche...",
         "sim-instruction": "Klicke auf den Bildschirm, um mit Vorhalt zu feuern!",
         "footer-text": "WoW Aim Trainer - Lehrmittel",
         "label-nation": "Nation:",
@@ -223,7 +263,20 @@ const translations = {
         "default-option-target": "GEGNER WÄHLEN",
         "placeholder-calculating": "Berechnung...",
         "credits-pre": "Diese Seite wurde von",
-        "credits-post": "erstellt. Die Entwicklung dauert an."
+        "credits-post": "erstellt. Die Entwicklung dauert an.",
+        // SIMULATION UI
+        "sim-task": "📋 AUFGABE",
+        "sim-distance": "🎯 Entfernung",
+        "sim-speed": "🚄 Geschw.",
+        "sim-time": "⏱️ Flugzeit",
+        "sim-hint": "Ziele basierend auf diesen Werten!",
+        "sim-highscore": "Highscore:",
+        "sim-score": "Punkte:",
+        "sim-misses": "Fehler:",
+        "btn-map": "🗺️ Karte",
+        "btn-norm": "⚓ Normal",
+        "btn-start": "Start",
+        "btn-reset": "Reset"
     },
     ru: {
         "app-title": "Калькулятор упреждения World of Warships",
@@ -245,6 +298,7 @@ const translations = {
         "unit-tick": "Деления",
         "unit-knot": "узлов",
         "btn-filter": "🔍 Фильтр",
+        "placeholder-search": "🔍 Поиск...",
         "sim-instruction": "Кликните по экрану для выстрела с упреждением!",
         "footer-text": "WoW Aim Trainer - Обучающий инструмент",
         "label-nation": "Нация:",
@@ -257,7 +311,20 @@ const translations = {
         "default-option-target": "ВЫБЕРИТЕ ПРОТИВНИКА",
         "placeholder-calculating": "Расчет...",
         "credits-pre": "Эта страница была создана",
-        "credits-post": ". Разработка продолжается."
+        "credits-post": ". Разработка продолжается.",
+        // SIMULATION UI
+        "sim-task": "📋 ЗАДАЧА",
+        "sim-distance": "🎯 Дистанция",
+        "sim-speed": "🚄 Скорость",
+        "sim-time": "⏱️ Время полета",
+        "sim-hint": "Цельтесь на основе этих значений!",
+        "sim-highscore": "Рекорд:",
+        "sim-score": "Очки:",
+        "sim-misses": "Промахи:",
+        "btn-map": "🗺️ Карта",
+        "btn-norm": "⚓ Нормально",
+        "btn-start": "Старт",
+        "btn-reset": "Сброс"
     },
     ja: {
         "app-title": "World of Warships 偏差射撃計算機",
@@ -279,6 +346,7 @@ const translations = {
         "unit-tick": "目盛り",
         "unit-knot": "ノット",
         "btn-filter": "🔍 フィルター",
+        "placeholder-search": "🔍 検索...",
         "sim-instruction": "画面をクリックして偏差射撃！",
         "footer-text": "WoW Aim Trainer - 教育ツール",
         "label-nation": "国:",
@@ -291,7 +359,20 @@ const translations = {
         "default-option-target": "敵艦を選択",
         "placeholder-calculating": "計算中...",
         "credits-pre": "このページは",
-        "credits-post": "によって作成されました。開発は継続中です。"
+        "credits-post": "によって作成されました。開発は継続中です。",
+        // SIMULATION UI
+        "sim-task": "📋 ミッション",
+        "sim-distance": "🎯 距離",
+        "sim-speed": "🚄 速度",
+        "sim-time": "⏱️ 飛行時間",
+        "sim-hint": "これらの値に基づいて狙ってください！",
+        "sim-highscore": "ベスト:",
+        "sim-score": "スコア:",
+        "sim-misses": "ミス:",
+        "btn-map": "🗺️ マップモード",
+        "btn-norm": "⚓ 通常モード",
+        "btn-start": "開始",
+        "btn-reset": "リセット"
     },
     zh: {
         "app-title": "战舰世界 瞄准计算器",
@@ -313,6 +394,7 @@ const translations = {
         "unit-tick": "格",
         "unit-knot": "节",
         "btn-filter": "🔍 筛选",
+        "placeholder-search": "🔍 搜索...",
         "sim-instruction": "点击屏幕进行提前量射击！",
         "footer-text": "WoW Aim Trainer - 教学工具",
         "label-nation": "国家:",
@@ -325,7 +407,20 @@ const translations = {
         "default-option-target": "选择敌人",
         "placeholder-calculating": "计算中...",
         "credits-pre": "此页面由",
-        "credits-post": "制作。开发仍在继续。"
+        "credits-post": "制作。开发仍在继续。",
+        // SIMULATION UI
+        "sim-task": "📋 任务",
+        "sim-distance": "🎯 距离",
+        "sim-speed": "🚄 速度",
+        "sim-time": "⏱️ 飞行时间",
+        "sim-hint": "根据这些这只瞄准！",
+        "sim-highscore": "最高分:",
+        "sim-score": "得分:",
+        "sim-misses": "失误:",
+        "btn-map": "🗺️ 地图模式",
+        "btn-norm": "⚓ 普通模式",
+        "btn-start": "开始",
+        "btn-reset": "重置"
     }
 };
 
@@ -334,6 +429,7 @@ function init() {
     populateSelectors('target');
     populateSelectors('attacker');
     setupEventListeners();
+    setupSearchListeners();
     updateLanguage('en'); // Default EN
 
 }
@@ -375,28 +471,48 @@ function populateSelectors(type) {
     const isAttacker = type === 'attacker';
     const selector = isAttacker ? attackerSelector : shipSelector;
     const db = isAttacker ? attackerDatabase : shipDatabase;
+    const searchInput = isAttacker ? document.getElementById('attacker-search') : document.getElementById('target-search');
+    const filterText = searchInput ? searchInput.value.toLowerCase() : '';
 
     // Update default option text based on language
     const defaultText = isAttacker ? translations[activeLanguage]['default-option-attacker'] : translations[activeLanguage]['default-option-target'];
-    selector.options[0].textContent = defaultText;
 
-    selector.innerHTML = selector.options[0].outerHTML;
+    // Save current selection to restore if possible
+    const currentSelection = selector.value;
+
+    selector.innerHTML = '';
+
+    // Default Option
+    const defOpt = document.createElement('option');
+    defOpt.value = 'custom';
+    defOpt.textContent = defaultText;
+    selector.appendChild(defOpt);
+
     db.sort((a, b) => a.name.localeCompare(b.name));
 
     const selectedTypes = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(cb => cb.value);
     const selectedNations = Array.from(document.querySelectorAll('input[name="nation"]:checked')).map(cb => cb.value);
     const selectedTiers = Array.from(document.querySelectorAll('input[name="tier"]:checked')).map(cb => cb.value);
 
+    const seenNames = new Set();
+
     db.forEach(ship => {
+        // Filter out test ships (names starting with '[') and duplicates
+        if (ship.name.startsWith('[') || seenNames.has(ship.name)) {
+            return;
+        }
+
         const sType = ship.type;
         const sNation = ship.nation;
         const sTier = String(ship.tier);
+        const nameMatch = ship.name.toLowerCase().includes(filterText);
 
         const typeMatch = selectedTypes.includes(sType);
         const nationMatch = selectedNations.includes(sNation) || (selectedNations.includes('Other') && !['Japan', 'USA', 'Germany', 'USSR', 'UK', 'France', 'Italy', 'Pan-Asia'].includes(sNation));
         const tierMatch = selectedTiers.includes(sTier) || (selectedTiers.includes('Other') && !['11', '10', '9', '8'].includes(sTier));
 
-        if (typeMatch && nationMatch && tierMatch) {
+        if (nameMatch && typeMatch && nationMatch && tierMatch) {
+            seenNames.add(ship.name);
             const option = document.createElement('option');
             option.value = ship.id || ship.name;
             if (isAttacker) {
@@ -407,6 +523,23 @@ function populateSelectors(type) {
             selector.appendChild(option);
         }
     });
+
+    // Restore selection if it still exists
+    if (currentSelection && Array.from(selector.options).some(o => o.value === currentSelection)) {
+        selector.value = currentSelection;
+    }
+}
+
+function setupSearchListeners() {
+    const attSearch = document.getElementById('attacker-search');
+    const trgSearch = document.getElementById('target-search');
+
+    if (attSearch) {
+        attSearch.addEventListener('input', () => populateSelectors('attacker'));
+    }
+    if (trgSearch) {
+        trgSearch.addEventListener('input', () => populateSelectors('target'));
+    }
 }
 
 function updateShipDisplay(type, val) {
@@ -702,7 +835,7 @@ function saveHighScore() {
     if (gameState.score > gameState.highScore) {
         gameState.highScore = gameState.score;
         localStorage.setItem('wow_aim_highscore', gameState.highScore);
-        highScoreEl.textContent = `En İyi: ${gameState.highScore}`;
+        highScoreEl.textContent = `${translations[activeLanguage]['sim-highscore']} ${gameState.highScore}`;
         highScoreEl.style.color = '#fff';
         setTimeout(() => highScoreEl.style.color = '#f59e0b', 500);
     }
@@ -856,8 +989,8 @@ function stopSimulation() {
 }
 
 function updateScore() {
-    scoreEl.textContent = `Puan: ${gameState.score}`;
-    missesEl.textContent = `Iskalar: ${gameState.misses}`;
+    scoreEl.textContent = `${translations[activeLanguage]['sim-score']} ${gameState.score}`;
+    missesEl.textContent = `${translations[activeLanguage]['sim-misses']} ${gameState.misses}`;
 }
 
 canvas.addEventListener('mousedown', (e) => {
@@ -1048,7 +1181,7 @@ function loop(timestamp) {
 
 toggleViewBtn.addEventListener('click', () => {
     gameState.viewMode = gameState.viewMode === 'side' ? 'top' : 'side';
-    toggleViewBtn.textContent = gameState.viewMode === 'side' ? "🗺️ Harita Modu" : "⚓ Normal Mod";
+    toggleViewBtn.textContent = gameState.viewMode === 'side' ? translations[activeLanguage]['btn-map'] : translations[activeLanguage]['btn-norm'];
 });
 
 // START STANDARD DRILL
