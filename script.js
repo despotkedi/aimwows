@@ -1,634 +1,674 @@
-// --- DOM Elements ---
-const tabs = document.querySelectorAll('.nav-btn');
-const tabContents = document.querySelectorAll('.tab-content');
-
-// Calculator Elements
-const speedInput = document.getElementById('target-speed');
-const speedSlider = document.getElementById('speed-slider');
-const distInput = document.getElementById('target-distance');
-const distSlider = document.getElementById('dist-slider');
-const angleSlider = document.getElementById('angle-slider');
-const flightTimeInput = document.getElementById('flight-time');
-const scaleInput = document.getElementById('scale-factor');
-const resultValue = document.getElementById('result-value');
+// DOM Elements
 const attackerSelector = document.getElementById('attacker-selector');
 const shipSelector = document.getElementById('ship-selector');
-
-// Labels for values
+const distInput = document.getElementById('dist-slider');
 const distValLabel = document.getElementById('dist-val');
+const targetDistInput = document.getElementById('target-distance');
+const speedInput = document.getElementById('target-speed');
+const speedSlider = document.getElementById('speed-slider');
 const speedValLabel = document.getElementById('speed-val');
+const angleSlider = document.getElementById('angle-slider');
 const angleValLabel = document.getElementById('angle-val');
+const scaleInput = document.getElementById('scale-factor');
+const flightTimeInput = document.getElementById('flight-time');
+const resultValue = document.getElementById('result-value');
+const openFilterBtn = document.getElementById('open-filter-btn');
+const openAttackerFilterBtn = document.getElementById('open-attacker-filter-btn');
+const modal = document.getElementById('filter-modal');
+const closeModal = document.querySelector('.close-modal');
+const applyFiltersBtn = document.getElementById('apply-filters-btn');
+const filterCheckboxes = document.querySelectorAll('#filter-modal input[type="checkbox"]');
+const langSelector = document.getElementById('lang-selector');
 
-// Timers
-const smokeBtn = document.getElementById('smoke-timer-btn');
-const spotterBtn = document.getElementById('spotter-timer-btn');
+// Attacker Info Elements
+const attackerShipImg = document.getElementById('attacker-ship-img');
+const attackerPlaceholder = document.getElementById('attacker-ship-placeholder');
+const attackerNameEl = document.getElementById('attacker-ship-name');
+const attackerNationEl = document.getElementById('attacker-ship-nation');
+const attackerTypeEl = document.getElementById('attacker-ship-type');
+const attackerVelocityEl = document.getElementById('attacker-ship-velocity');
+
+// Target Info Elements - RIGHT PANEL
+const targetShipImg = document.getElementById('target-ship-img');
+const targetPlaceholder = document.getElementById('target-ship-placeholder');
+const targetNameEl = document.getElementById('target-ship-name');
+const targetNationEl = document.getElementById('target-ship-nation');
+const targetTypeEl = document.getElementById('target-ship-type');
+const targetMaxSpeedEl = document.getElementById('target-ship-max-speed');
 
 // Simulation Elements
 const canvas = document.getElementById('aim-canvas');
 const ctx = canvas.getContext('2d');
-const startSimBtn = document.getElementById('start-sim-btn');
-const resetSimBtn = document.getElementById('reset-sim-btn');
-const toggleViewBtn = document.getElementById('toggle-view-btn');
 const scoreEl = document.getElementById('sim-score');
 const highScoreEl = document.getElementById('sim-high-score');
 const missesEl = document.getElementById('sim-misses');
 const feedbackEl = document.querySelector('.sim-feedback p');
+const startSimBtn = document.getElementById('start-sim-btn');
+const resetSimBtn = document.getElementById('reset-sim-btn');
+const toggleViewBtn = document.getElementById('toggle-view-btn');
 
-// --- DATABASES ---
-// shipDatabase & attackerDatabase are loaded from ships.js
-// attackerDatabase ships.js dosyasından yüklenmektedir.
 
 
-// Modal Elements
-const filterModal = document.getElementById('filter-modal');
-const openFilterBtn = document.getElementById('open-filter-btn');
-const openAttackerFilterBtn = document.getElementById('open-attacker-filter-btn');
-const closeFilterBtn = document.querySelector('.close-modal');
-const applyFiltersBtn = document.getElementById('apply-filters-btn');
-const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+// Tabs
+const tabs = document.querySelectorAll('.nav-btn');
+const tabContents = document.querySelectorAll('.tab-content');
 
-// FILTER STATE
-const filterState = {
-    target: { type: ["BB", "CA", "DD", "CV", "SUB"], nation: ["Japan", "USA", "Germany", "USSR", "UK", "France", "Italy", "Pan-Asia", "Other"], tier: ["11", "10", "9", "8", "Other"] },
-    attacker: { type: ["BB", "CA", "DD", "CV", "SUB"], nation: ["Japan", "USA", "Germany", "USSR", "UK", "France", "Italy", "Pan-Asia", "Other"], tier: ["11", "10", "9", "8", "Other"] }
-};
+// State
+let currentFilterContext = 'target'; // 'attacker' or 'target'
+let activeLanguage = 'en';
 
-let currentFilterContext = 'target'; // 'target' or 'attacker'
-
-// --- INITIALIZATION ---
-function init() {
-    initFilters();
-    populateSelectors('target');
-    populateSelectors('attacker');
-    initSliders();
-    initTimers();
-    loadHighScore();
-    calculateLead();
-
-    // API Call
-    // fetchShipsFromAPI(); // Disabled in favor of static ships.js which includes AttackerDB
-
-    initLanguage();
+// Ship Data is in ships.js (assumed loaded before script.js)
+// If not, we define empty fallback
+if (typeof shipDatabase === 'undefined') {
+    window.shipDatabase = [
+        { id: "Yamato", name: "Yamato", speed: 27, type: "BB", nation: "Japan", tier: 10, image: "https://wows-gloss-icons.wgcdn.co/icons/vehicle/large/PJSB018_c89b782987.png" },
+        { id: "Montana", name: "Montana", speed: 30, type: "BB", nation: "USA", tier: 10, image: "https://wows-gloss-icons.wgcdn.co/icons/vehicle/large/PASB017_b64e056972.png" },
+        { id: "Shimakaze", name: "Shimakaze", speed: 39, type: "DD", nation: "Japan", tier: 10, image: "https://wows-gloss-icons.wgcdn.co/icons/vehicle/large/PJSD012_50c0598823.png" },
+        { id: "Des Moines", name: "Des Moines", speed: 33, type: "CA", nation: "USA", tier: 10, image: "https://wows-gloss-icons.wgcdn.co/icons/vehicle/large/PASC020_034f0c0587.png" }
+    ];
 }
 
+// Attacker Database - Enriching shipDatabase with velocity if possible, or separate.
+if (typeof attackerDatabase === 'undefined') {
+    window.attackerDatabase = [
+        { id: "Yamato", name: "Yamato", velocity: 780, type: "BB", nation: "Japan", tier: 10 },
+        { id: "Montana", name: "Montana", velocity: 762, type: "BB", nation: "USA", tier: 10 },
+        { id: "Vermont", name: "Vermont", velocity: 701, type: "BB", nation: "USA", tier: 10 },
+        { id: "Slava", name: "Slava", velocity: 870, type: "BB", nation: "USSR", tier: 10 },
+        { id: "Shimakaze", name: "Shimakaze", velocity: 915, type: "DD", nation: "Japan", tier: 10 },
+        { id: "Des Moines", name: "Des Moines", velocity: 823, type: "CA", nation: "USA", tier: 10 }
+    ];
+}
+
+// Translations
 const translations = {
     tr: {
-        "app-title": "⚓ Mermi Uçuş Süresi Hesaplayıcı",
+        "app-title": "World of Warships Aim Calculator",
         "nav-calc": "Önleme (Lead) Hesaplayıcı",
         "nav-sim": "Eğitim Simülasyonu",
+        "attacker-title": "🔵 Sizin Geminiz",
+        "target-title": "🔴 Düşman Gemisi",
         "calc-title": "🎯 Mermi Uçuş Süresi Hesaplayıcı",
         "calc-desc": "Gemi hızı, mesafe ve açıya göre nişan noktasını hesaplar.",
-        "attacker-title": "🔵 Sizin Geminiz",
         "label-select-ship": "Gemini Seç",
-        "btn-filter": "🔍 Filtrele",
+        "label-select-target": "Düşman Seç",
         "label-distance": "Mesafe",
         "label-scale": "Ölçek (Nişangah)",
-        "target-title": "🔴 Düşman Gemisi",
-        "label-select-target": "Düşman Seç",
         "label-speed": "Hız",
         "label-angle": "Açı",
         "label-flight-time": "⏱️ Uçuş Süresi:",
-        "unit-seconds": "saniye",
         "result-title": "Nişan Alman Gereken Yer:",
+        "unit-seconds": "saniye",
         "unit-tick": "Tick (Birim)",
-        "timers-title": "⏱️ Taktik Zamanlayıcılar",
-        "btn-smoke": "💨 Duman (45s)",
-        "btn-spotter": "✈️ Uçak (60s)",
+        "unit-knot": "knot",
+        "btn-filter": "🔍 Filtrele",
         "sim-instruction": "Önleme vererek ateş etmek için ekrana tıkla!",
         "footer-text": "WoW Aim Trainer - Eğitim Aracı",
-        "default-attacker": "GEMİNİ SEÇ",
-        "default-target": "DÜŞMAN GEMİSİNİ SEÇ",
-        "filter-modal-title-target": "🔍 Filtrele: Düşman Gemisi",
-        "filter-modal-title-attacker": "🔍 Filtrele: Sizin Geminiz",
-        "btn-apply-close": "Uygula ve Kapat",
-        "footer-credits": "Bu sayfa <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a> tarafından yapılmıştır. Geliştirilmeye devam etmektedir."
+        "label-nation": "Ülke:",
+        "label-type": "Tip:",
+        "label-velocity": "Mermi Hızı:",
+        "label-max-speed": "Max Hız:",
+        "text-select-ship": "Gemini Seç",
+        "text-select-target": "Düşman Seç",
+        "default-option-attacker": "GEMİNİ SEÇ",
+        "default-option-target": "DÜŞMAN GEMİSİNİ SEÇ",
+        "placeholder-calculating": "Hesaplanıyor...",
+        "credits-pre": "Bu sayfa",
+        "credits-post": "tarafından yapılmıştır. Geliştirilmeye devam etmektedir."
     },
     en: {
-        "app-title": "⚓ Shell Flight Time Calculator",
+        "app-title": "World of Warships Aim Calculator",
         "nav-calc": "Lead Calculator",
         "nav-sim": "Training Simulation",
-        "calc-title": "🎯 Shell Flight Time Calculator",
-        "calc-desc": "Calculates aim point based on ship speed, distance, and angle.",
         "attacker-title": "🔵 Your Ship",
-        "label-select-ship": "Select Ship",
-        "btn-filter": "🔍 Filter",
+        "target-title": "🔴 Enemy Ship",
+        "calc-title": "🎯 Shell Flight Time & Lead Calculator",
+        "calc-desc": "Calculates aim point based on ship speed, distance, and angle.",
+        "label-select-ship": "Select Your Ship",
+        "label-select-target": "Select Enemy Ship",
         "label-distance": "Distance",
         "label-scale": "Scale (Crosshair)",
-        "target-title": "🔴 Enemy Ship",
-        "label-select-target": "Select Enemy",
         "label-speed": "Speed",
         "label-angle": "Angle",
         "label-flight-time": "⏱️ Flight Time:",
-        "unit-seconds": "seconds",
         "result-title": "Aim Point:",
+        "unit-seconds": "seconds",
         "unit-tick": "Ticks",
-        "timers-title": "⏱️ Tactical Timers",
-        "btn-smoke": "💨 Smoke (45s)",
-        "btn-spotter": "✈️ Spotter (60s)",
-        "sim-instruction": "Click screen to fire with lead!",
-        "footer-text": "WoW Aim Trainer - Training Tool",
-        "default-attacker": "SELECT YOUR SHIP",
-        "default-target": "SELECT ENEMY SHIP",
-        "filter-modal-title-target": "🔍 Filter: Enemy Ship",
-        "filter-modal-title-attacker": "🔍 Filter: Your Ship",
-        "btn-apply-close": "Apply & Close",
-        "footer-credits": "This page was made by <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Work in progress."
+        "unit-knot": "knots",
+        "btn-filter": "🔍 Filter",
+        "sim-instruction": "Click on screen to shoot with lead!",
+        "footer-text": "WoW Aim Trainer - Educational Tool",
+        "label-nation": "Nation:",
+        "label-type": "Type:",
+        "label-velocity": "Shell Velocity:",
+        "label-max-speed": "Max Speed:",
+        "text-select-ship": "Select Ship",
+        "text-select-target": "Select Enemy",
+        "default-option-attacker": "SELECT SHIP",
+        "default-option-target": "SELECT ENEMY",
+        "placeholder-calculating": "Calculating...",
+        "credits-pre": "This page was made by",
+        "credits-post": ". Development is ongoing."
     },
     it: {
-        "app-title": "⚓ Calcolatore Tempo di Volo",
+        "app-title": "Calcolatore di Tiro World of Warships",
         "nav-calc": "Calcolatore Anticipo",
         "nav-sim": "Simulazione Addestramento",
-        "calc-title": "🎯 Calcolatore Tempo di Volo",
-        "calc-desc": "Calcola il punto di mira in base a velocità nave, distanza e angolo.",
-        "attacker-title": "🔵 La Tua Nave",
-        "label-select-ship": "Seleziona Nave",
-        "btn-filter": "🔍 Filtra",
+        "attacker-title": "🔵 La tua Nave",
+        "target-title": "🔴 Nave Nemica",
+        "calc-title": "🎯 Calcolatore Tempo di Volo & Anticipo",
+        "calc-desc": "Calcola il punto di mira basandosi su velocità, distanza e angolo.",
+        "label-select-ship": "Seleziona la tua Nave",
+        "label-select-target": "Seleziona Nave Nemica",
         "label-distance": "Distanza",
         "label-scale": "Scala (Mirino)",
-        "target-title": "🔴 Nave Nemica",
-        "label-select-target": "Seleziona Nemico",
         "label-speed": "Velocità",
         "label-angle": "Angolo",
         "label-flight-time": "⏱️ Tempo di Volo:",
-        "unit-seconds": "secondi",
         "result-title": "Punto di Mira:",
+        "unit-seconds": "secondi",
         "unit-tick": "Tacche",
-        "timers-title": "⏱️ Timer Tattici",
-        "btn-smoke": "💨 Fumo (45s)",
-        "btn-spotter": "✈️ Ricognitore (60s)",
-        "sim-instruction": "Clicca per sparare con l'anticipo!",
-        "footer-text": "WoW Aim Trainer - Strumento di Addestramento",
-        "default-attacker": "SELEZIONA LA TUA NAVE",
-        "default-target": "SELEZIONA NAVE NEMICA",
-        "filter-modal-title-target": "🔍 Filtra: Nave Nemica",
-        "filter-modal-title-attacker": "🔍 Filtra: La Tua Nave",
-        "btn-apply-close": "Applica e Chiudi",
-        "footer-credits": "Questa pagina è stata creata da <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Lavori in corso."
+        "unit-knot": "nodi",
+        "btn-filter": "🔍 Filtra",
+        "sim-instruction": "Clicca sullo schermo per sparare con anticipo!",
+        "footer-text": "WoW Aim Trainer - Strumento Educativo",
+        "label-nation": "Nazione:",
+        "label-type": "Tipo:",
+        "label-velocity": "Velocità Proiettile:",
+        "label-max-speed": "Velocità Max:",
+        "text-select-ship": "Seleziona Nave",
+        "text-select-target": "Seleziona Nemico",
+        "default-option-attacker": "SELEZIONA NAVE",
+        "default-option-target": "SELEZIONA NEMICO",
+        "placeholder-calculating": "Calcolo...",
+        "credits-pre": "Questa pagina è stata creata da",
+        "credits-post": ". Lo sviluppo è in corso."
     },
     de: {
-        "app-title": "⚓ Flugzeit-Rechner",
-        "nav-calc": "Vorhalte-Rechner",
-        "nav-sim": "Trainings-Simulation",
-        "calc-title": "🎯 Flugzeit-Rechner",
-        "calc-desc": "Berechnet den Zielpunkt basierend auf Schiffsgeschwindigkeit, Entfernung und Winkel.",
+        "app-title": "World of Warships Zielrechner",
+        "nav-calc": "Vorhalt-Rechner",
+        "nav-sim": "Trainingssimulation",
         "attacker-title": "🔵 Dein Schiff",
-        "label-select-ship": "Schiff Wählen",
-        "btn-filter": "🔍 Filter",
+        "target-title": "🔴 Gegnerschiff",
+        "calc-title": "🎯 Flugzeit & Vorhalt Rechner",
+        "calc-desc": "Berechnet den Zielpunkt basierend auf Schiffsgeschwindigkeit, Entfernung und Winkel.",
+        "label-select-ship": "Wähle dein Schiff",
+        "label-select-target": "Wähle Gegnerschiff",
         "label-distance": "Entfernung",
         "label-scale": "Skala (Fadenkreuz)",
-        "target-title": "🔴 Gegnerschiff",
-        "label-select-target": "Gegner Wählen",
         "label-speed": "Geschwindigkeit",
         "label-angle": "Winkel",
         "label-flight-time": "⏱️ Flugzeit:",
-        "unit-seconds": "Sekunden",
         "result-title": "Zielpunkt:",
-        "unit-tick": "Ticks",
-        "timers-title": "⏱️ Taktische Timer",
-        "btn-smoke": "💨 Nebel (45s)",
-        "btn-spotter": "✈️ Aufklärer (60s)",
-        "sim-instruction": "Klicke um mit Vorhalt zu feuern!",
-        "footer-text": "WoW Aim Trainer - Trainings-Tool",
-        "default-attacker": "WÄHLE DEIN SCHIFF",
-        "default-target": "WÄHLE GEGNERSCHIFF",
-        "filter-modal-title-target": "🔍 Filter: Gegnerschiff",
-        "filter-modal-title-attacker": "🔍 Filter: Dein Schiff",
-        "btn-apply-close": "Anwenden & Schließen",
-        "footer-credits": "Diese Seite wurde von <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a> erstellt. Noch in Entwicklung."
+        "unit-seconds": "Sekunden",
+        "unit-tick": "Striche",
+        "unit-knot": "Knoten",
+        "btn-filter": "🔍 Filter",
+        "sim-instruction": "Klicke auf den Bildschirm, um mit Vorhalt zu feuern!",
+        "footer-text": "WoW Aim Trainer - Lehrmittel",
+        "label-nation": "Nation:",
+        "label-type": "Typ:",
+        "label-velocity": "Mündungsgeschw.:",
+        "label-max-speed": "Max Geschw.:",
+        "text-select-ship": "Schiff Wählen",
+        "text-select-target": "Gegner Wählen",
+        "default-option-attacker": "SCHIFF WÄHLEN",
+        "default-option-target": "GEGNER WÄHLEN",
+        "placeholder-calculating": "Berechnung...",
+        "credits-pre": "Diese Seite wurde von",
+        "credits-post": "erstellt. Die Entwicklung dauert an."
     },
     ru: {
-        "app-title": "⚓ Калькулятор Времени Полета",
-        "nav-calc": "Калькулятор Упреждения",
-        "nav-sim": "Тренировочная Симуляция",
-        "calc-title": "🎯 Калькулятор Времени Полета",
-        "calc-desc": "Рассчитывает точку прицеливания на основе скорости корабля, дистанции и угла.",
-        "attacker-title": "🔵 Ваш Корабль",
-        "label-select-ship": "Выбрать Корабль",
-        "btn-filter": "🔍 Фильтр",
+        "app-title": "Калькулятор упреждения World of Warships",
+        "nav-calc": "Калькулятор упреждения",
+        "nav-sim": "Тренировочная симуляция",
+        "attacker-title": "🔵 Ваш корабль",
+        "target-title": "🔴 Корабль противника",
+        "calc-title": "🎯 Калькулятор времени полета и упреждения",
+        "calc-desc": "Рассчитывает точку прицеливания на основе скорости, дистанции и угла.",
+        "label-select-ship": "Выберите ваш корабль",
+        "label-select-target": "Выберите противника",
         "label-distance": "Дистанция",
         "label-scale": "Масштаб (Прицел)",
-        "target-title": "🔴 Корабль Противника",
-        "label-select-target": "Выбрать Противника",
         "label-speed": "Скорость",
         "label-angle": "Угол",
-        "label-flight-time": "⏱️ Время Полета:",
-        "unit-seconds": "сек",
-        "result-title": "Точка Прицеливания:",
-        "unit-tick": "Тики",
-        "timers-title": "⏱️ Тактические Таймеры",
-        "btn-smoke": "💨 Дым (45с)",
-        "btn-spotter": "✈️ Корректировщик (60с)",
-        "sim-instruction": "Нажми на экран, чтобы выстрелить с упреждением!",
-        "footer-text": "WoW Aim Trainer - Инструмент Тренировки",
-        "default-attacker": "ВЫБЕРИТЕ ВАШ КОРАБЛЬ",
-        "default-target": "ВЫБЕРИТЕ ПРОТИВНИКА",
-        "filter-modal-title-target": "🔍 Фильтр: Корабль Противника",
-        "filter-modal-title-attacker": "🔍 Фильтр: Ваш Корабль",
-        "btn-apply-close": "Применить и Закрыть",
-        "footer-credits": "Эта страница создана <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Разработка продолжается."
+        "label-flight-time": "⏱️ Время полета:",
+        "result-title": "Точка прицеливания:",
+        "unit-seconds": "секунд",
+        "unit-tick": "Деления",
+        "unit-knot": "узлов",
+        "btn-filter": "🔍 Фильтр",
+        "sim-instruction": "Кликните по экрану для выстрела с упреждением!",
+        "footer-text": "WoW Aim Trainer - Обучающий инструмент",
+        "label-nation": "Нация:",
+        "label-type": "Тип:",
+        "label-velocity": "Скор. снаряда:",
+        "label-max-speed": "Макс. скор.:",
+        "text-select-ship": "Выберите Корабль",
+        "text-select-target": "Выберите Противника",
+        "default-option-attacker": "ВЫБЕРИТЕ КОРАБЛЬ",
+        "default-option-target": "ВЫБЕРИТЕ ПРОТИВНИКА",
+        "placeholder-calculating": "Расчет...",
+        "credits-pre": "Эта страница была создана",
+        "credits-post": ". Разработка продолжается."
+    },
+    ja: {
+        "app-title": "World of Warships 偏差射撃計算機",
+        "nav-calc": "偏差計算機",
+        "nav-sim": "トレーニングシミュレーション",
+        "attacker-title": "🔵 自艦",
+        "target-title": "🔴 敵艦",
+        "calc-title": "🎯 弾着時間＆偏差計算機",
+        "calc-desc": "速度、距離、角度に基づいて照準点を計算します。",
+        "label-select-ship": "自艦を選択",
+        "label-select-target": "敵艦を選択",
+        "label-distance": "距離",
+        "label-scale": "スケール (照準)",
+        "label-speed": "速度",
+        "label-angle": "角度",
+        "label-flight-time": "⏱️ 弾着時間:",
+        "result-title": "照準点:",
+        "unit-seconds": "秒",
+        "unit-tick": "目盛り",
+        "unit-knot": "ノット",
+        "btn-filter": "🔍 フィルター",
+        "sim-instruction": "画面をクリックして偏差射撃！",
+        "footer-text": "WoW Aim Trainer - 教育ツール",
+        "label-nation": "国:",
+        "label-type": "艦種:",
+        "label-velocity": "初速:",
+        "label-max-speed": "最大速度:",
+        "text-select-ship": "艦船を選択",
+        "text-select-target": "敵艦を選択",
+        "default-option-attacker": "艦船を選択",
+        "default-option-target": "敵艦を選択",
+        "placeholder-calculating": "計算中...",
+        "credits-pre": "このページは",
+        "credits-post": "によって作成されました。開発は継続中です。"
+    },
+    zh: {
+        "app-title": "战舰世界 瞄准计算器",
+        "nav-calc": "提前量计算器",
+        "nav-sim": "训练模拟",
+        "attacker-title": "🔵 你的战舰",
+        "target-title": "🔴 敌方战舰",
+        "calc-title": "🎯 炮弹飞行时间 & 提前量计算器",
+        "calc-desc": "基于速度、距离和角度计算瞄准点。",
+        "label-select-ship": "选择你的战舰",
+        "label-select-target": "选择敌方战舰",
+        "label-distance": "距离",
+        "label-scale": "刻度 (瞄准镜)",
+        "label-speed": "速度",
+        "label-angle": "角度",
+        "label-flight-time": "⏱️ 飞行时间:",
+        "result-title": "瞄准点:",
+        "unit-seconds": "秒",
+        "unit-tick": "格",
+        "unit-knot": "节",
+        "btn-filter": "🔍 筛选",
+        "sim-instruction": "点击屏幕进行提前量射击！",
+        "footer-text": "WoW Aim Trainer - 教学工具",
+        "label-nation": "国家:",
+        "label-type": "类型:",
+        "label-velocity": "弹速:",
+        "label-max-speed": "最大航速:",
+        "text-select-ship": "选择战舰",
+        "text-select-target": "选择敌人",
+        "default-option-attacker": "选择战舰",
+        "default-option-target": "选择敌人",
+        "placeholder-calculating": "计算中...",
+        "credits-pre": "此页面由",
+        "credits-post": "制作。开发仍在继续。"
     }
 };
 
-let currentLang = 'tr';
+function init() {
+    loadHighScore();
+    populateSelectors('target');
+    populateSelectors('attacker');
+    setupEventListeners();
+    updateLanguage('en'); // Default EN
 
-function initLanguage() {
-    const selector = document.getElementById('lang-selector');
-    if (selector) {
-        selector.addEventListener('change', (e) => {
-            setLanguage(e.target.value);
-        });
-        // Set initial based on selector
-        setLanguage(selector.value);
-    }
 }
 
-function setLanguage(lang) {
-    if (!translations[lang]) return;
-    currentLang = lang;
-
-    // Update all data-i18n elements
+function updateLanguage(lang) {
+    activeLanguage = lang;
+    const t = translations[lang] || translations['en'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (translations[lang][key]) {
-            el.innerHTML = translations[lang][key];
-        }
+        if (t[key]) el.textContent = t[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.placeholder = t[key];
     });
 
-    // Update dynamic elements (dropdown defaults)
-    updateDynamicText(lang);
+    // Refresh selectors to update default option text
+    populateSelectors('attacker');
+    populateSelectors('target');
+
+    // Refresh ship display text if in default state (custom)
+    if (attackerSelector.value === 'custom') updateShipDisplay('attacker', 'custom');
+    if (shipSelector.value === 'custom') updateShipDisplay('target', 'custom');
 }
 
-function updateDynamicText(lang) {
-    const t = translations[lang];
-
-    // Update Selector Defaults
-    const attackerOpt = document.querySelector('#attacker-selector option[value="custom"]');
-    if (attackerOpt) attackerOpt.textContent = t["default-attacker"];
-
-    const targetOpt = document.querySelector('#ship-selector option[value="custom"]');
-    if (targetOpt) targetOpt.textContent = t["default-target"];
-
-    // Update Modal Titles if open (or static text)
-    // Note: Modal titles are dynamic in openModal(), we need to update that function too or just handle it here?
-    // Let's update openModal to use translation.
-
-    // Update Filter Button Text (Apply)
-    const applyBtn = document.getElementById('apply-filters-btn');
-    if (applyBtn) applyBtn.textContent = t["btn-apply-close"];
-}
-
-const API_APP_ID = "958ff05fbaa850b4c2bd0d171eb7e9cc";
-const API_BASE_URL = "https://api.worldofwarships.eu/wows/encyclopedia/ships/";
-
-async function fetchShipsFromAPI() {
-    console.log("Fetching ships from Wargaming API...");
-    // Update UI to show loading state if you want, or just log
-
-    let allShips = [];
-    let pageNo = 1;
-    const limit = 100;
-
-    try {
-        while (true) {
-            const url = `${API_BASE_URL}?application_id=${API_APP_ID}&limit=${limit}&page_no=${pageNo}&fields=name,tier,type,nation,default_profile.speed_in_knots,default_profile.mobility.speed,images.small,is_premium,is_special`;
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                console.error("API Request Failed:", response.status, response.statusText);
-                break;
-            }
-
-            const data = await response.json();
-
-            if (data.status !== "ok" || !data.data) {
-                console.error("API Error:", data.error);
-                break;
-            }
-
-            const pageShips = Object.values(data.data);
-            if (pageShips.length === 0) break; // No more data
-
-            allShips = allShips.concat(pageShips);
-
-            // Check meta for total pages if available, or just rely on empty count
-            if (data.meta && data.meta.page_total && pageNo >= data.meta.page_total) {
-                break;
-            }
-
-            pageNo++;
-        }
-
-        console.log(`Fetched ${allShips.length} ships from API.`);
-
-        // Transform and Update Database
-        if (allShips.length > 0) {
-            const transformedShips = allShips.map(ship => {
-                // Determine Speed
-                // API 1: default_profile.speed_in_knots (deprecated or specific)
-                // API 2: default_profile.mobility.speed
-                // Fallback to 30 if null (common for submarines/cvs sometimes not fully profiled in basic endpoint)
-                let speed = 0;
-                if (ship.default_profile && ship.default_profile.mobility) {
-                    speed = ship.default_profile.mobility.speed;
-                }
-
-                // Map API Types to Our Types
-                // API: "Destroyer", "Cruiser", "Battleship", "AirCarrier", "Submarine"
-                // Our: "DD", "CA", "BB", "CV", "SUB"
-                const typeMap = {
-                    "Destroyer": "DD",
-                    "Cruiser": "CA",
-                    "Battleship": "BB",
-                    "AirCarrier": "CV",
-                    "Submarine": "SUB"
-                };
-
-                let myType = typeMap[ship.type] || "Other";
-
-                // Map Nations (Capitalize 1st letter usually works, but ensure match)
-                // API: "japan", "usa", "ussr", "germany", "uk", "france", "italy", "pan_asia", "commonwealth", "pan_america", "europe", "netherlands", "spain"
-                // Our Filter: ["Japan", "USA", "Germany", "USSR", "UK", "France", "Italy", "Pan-Asia", "Other"]
-                // We should format nation to Title Case.
-                let nation = ship.nation.charAt(0).toUpperCase() + ship.nation.slice(1);
-                if (nation === "Usa") nation = "USA";
-                if (nation === "Ussr") nation = "USSR";
-                if (nation === "Uk") nation = "UK";
-                if (nation === "Pan_asia") nation = "Pan-Asia";
-
-                return {
-                    name: ship.name,
-                    speed: speed,
-                    type: myType,
-                    nation: nation,
-                    tier: String(ship.tier), // API returns number, we use string in filters sometimes
-                    is_premium: ship.is_premium || ship.is_special
-                };
-            }).filter(s => s.speed > 0); // Filter out entities with no speed (like auxiliary or error)
-
-            // Update Global Database
-            // Optional: Merge with existing or Replace?
-            // Strategy: Replace the static list entirely with the API list for "live" data.
-            // But let's keep the custom ones? For now, let's just REPLACE `shipDatabase` content but keep reference.
-
-            // Clear existing static data (optional, maybe we want to keep it if API fails? But here we are in success block)
-            shipDatabase.length = 0;
-            transformedShips.forEach(s => shipDatabase.push(s));
-
-            // Also populate AttackerDB? 
-            // AttackerDB needs 'velocity' (shell velocity), which is NOT in the basic ship info.
-            // Getting shell velocity requires querying 'artillery' module details which is a deep separate call per ship.
-            // For now, we ONLY update target ships (shipDatabase) as requested.
-
-            // Re-populate Selectors
-            populateSelectors('target');
-
-            console.log("Database updated.");
-
-            // Provide visual feedback
-            const countStr = `API'den ${transformedShips.length} gemi yüklendi.`;
-            const header = document.querySelector('.modal-header h3');
-            if (header) header.setAttribute('title', countStr); // subtly add info
-
-            // Or use a toast? For now console is fine + UI update.
-            // Maybe update the "Custom" option text to show total count?
-            const defaultOpt = shipSelector.querySelector('option[value="custom"]');
-            if (defaultOpt) defaultOpt.textContent = `DÜŞMAN GEMİSİNİ SEÇ (${transformedShips.length})`;
-        }
-
-    } catch (err) {
-        console.error("Failed to fetch ships:", err);
-    }
-}
-
-function initFilters() {
-    openFilterBtn.onclick = () => openModal('target');
-    openAttackerFilterBtn.onclick = () => openModal('attacker');
-
-    closeFilterBtn.onclick = () => filterModal.style.display = "none";
-
-    applyFiltersBtn.onclick = () => {
-        saveFilters(currentFilterContext);
-        populateSelectors(currentFilterContext);
-        filterModal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-        if (event.target == filterModal) filterModal.style.display = "none";
-    }
-}
-
-function openModal(context) {
+// --- FILTERS ---
+function openFilterModal(context) {
     currentFilterContext = context;
-    const filters = filterState[context];
-
-    checkboxes.forEach(cb => {
-        cb.checked = filters[cb.name].includes(cb.value);
-    });
-
-    const t = translations[currentLang];
-    document.querySelector('.modal-header h3').textContent =
-        context === 'target' ? t["filter-modal-title-target"] : t["filter-modal-title-attacker"];
-
-    filterModal.style.display = "block";
+    modal.style.display = "block";
 }
 
-function saveFilters(context) {
-    filterState[context] = { type: [], nation: [], tier: [] };
-    checkboxes.forEach(cb => {
-        if (cb.checked) filterState[context][cb.name].push(cb.value);
+function applyFilters() {
+    populateSelectors(currentFilterContext);
+    modal.style.display = "none";
+}
+
+// --- SELECTORS ---
+function populateSelectors(type) {
+    const isAttacker = type === 'attacker';
+    const selector = isAttacker ? attackerSelector : shipSelector;
+    const db = isAttacker ? attackerDatabase : shipDatabase;
+
+    // Update default option text based on language
+    const defaultText = isAttacker ? translations[activeLanguage]['default-option-attacker'] : translations[activeLanguage]['default-option-target'];
+    selector.options[0].textContent = defaultText;
+
+    selector.innerHTML = selector.options[0].outerHTML;
+    db.sort((a, b) => a.name.localeCompare(b.name));
+
+    const selectedTypes = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(cb => cb.value);
+    const selectedNations = Array.from(document.querySelectorAll('input[name="nation"]:checked')).map(cb => cb.value);
+    const selectedTiers = Array.from(document.querySelectorAll('input[name="tier"]:checked')).map(cb => cb.value);
+
+    db.forEach(ship => {
+        const sType = ship.type;
+        const sNation = ship.nation;
+        const sTier = String(ship.tier);
+
+        const typeMatch = selectedTypes.includes(sType);
+        const nationMatch = selectedNations.includes(sNation) || (selectedNations.includes('Other') && !['Japan', 'USA', 'Germany', 'USSR', 'UK', 'France', 'Italy', 'Pan-Asia'].includes(sNation));
+        const tierMatch = selectedTiers.includes(sTier) || (selectedTiers.includes('Other') && !['11', '10', '9', '8'].includes(sTier));
+
+        if (typeMatch && nationMatch && tierMatch) {
+            const option = document.createElement('option');
+            option.value = ship.id || ship.name;
+            if (isAttacker) {
+                option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} (${ship.caliber || "?"}) (${ship.velocity} m/s)`;
+            } else {
+                option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} - ${ship.speed} kts`;
+            }
+            selector.appendChild(option);
+        }
     });
 }
 
-function populateSelectors(context) {
-    const selector = context === 'target' ? shipSelector : attackerSelector;
-    const database = context === 'target' ? shipDatabase : attackerDatabase;
-    const filters = filterState[context];
+function updateShipDisplay(type, val) {
+    const isAttacker = type === 'attacker';
+    const db = isAttacker ? attackerDatabase : shipDatabase;
+    const imgEl = isAttacker ? attackerShipImg : targetShipImg;
+    const placeholderEl = isAttacker ? attackerPlaceholder : targetPlaceholder;
+    const nameEl = isAttacker ? attackerNameEl : targetNameEl;
+    const nationEl = isAttacker ? attackerNationEl : targetNationEl;
+    const typeEl = isAttacker ? attackerTypeEl : targetTypeEl;
+    const velEl = isAttacker ? attackerVelocityEl : null;
+    const speedEl = !isAttacker ? targetMaxSpeedEl : null;
 
-    // Clear existing options
-    if (context === 'target') {
-        selector.innerHTML = '<option value="custom">DÜŞMAN GEMİSİNİ SEÇ</option>';
-    } else {
-        selector.innerHTML = '<option value="custom">GEMİNİ SEÇ</option>';
+    if (val === 'custom') {
+        imgEl.style.display = 'none';
+        placeholderEl.style.display = 'flex';
+        nameEl.textContent = isAttacker ? translations[activeLanguage]['text-select-ship'] : translations[activeLanguage]['text-select-target'];
+        nationEl.textContent = "-";
+        typeEl.textContent = "-";
+        if (velEl) velEl.textContent = "-";
+        if (speedEl) speedEl.textContent = "-";
+        return;
     }
 
-    // Filter Logic
-    const filteredShips = database.filter(ship => {
-        // Safe check for missing properties (Attacker DB might be missing some initially, assumes all good now)
-        if (!ship.type || !ship.nation || !ship.tier) return true;
+    const ship = db.find(s => s.id === val || s.name === val);
+    if (ship) {
+        nameEl.textContent = ship.name;
+        nationEl.textContent = ship.nation;
+        typeEl.textContent = ship.type;
+        if (velEl) velEl.textContent = ship.velocity;
+        if (speedEl) speedEl.textContent = ship.speed;
 
-        const typeMatch = filters.type.includes(ship.type);
-
-        let validNation = filters.nation.includes(ship.nation);
-        if (!validNation && filters.nation.includes('Other')) {
-            const mainNations = ["Japan", "USA", "Germany", "USSR", "UK", "France", "Italy", "Pan-Asia"];
-            if (!mainNations.includes(ship.nation)) validNation = true;
-        }
-
-        let validTier = filters.tier.includes(ship.tier);
-        if (!validTier && filters.tier.includes('Other')) {
-            if (!["11", "10", "9", "8"].includes(ship.tier)) validTier = true;
-        }
-
-        return typeMatch && validNation && validTier;
-    });
-
-    // Sort Alphabetically
-    filteredShips.sort((a, b) => a.name.localeCompare(b.name));
-
-    let count = 0;
-    filteredShips.forEach(ship => {
-        const option = document.createElement('option');
-        if (context === 'target') {
-            option.value = ship.speed;
-            option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} - ${ship.speed} kts`;
+        if (ship.image) {
+            imgEl.src = ship.image;
+            imgEl.style.display = 'block';
+            placeholderEl.style.display = 'none';
         } else {
-            option.value = ship.velocity;
-            option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} (${ship.velocity} m/s)`;
+            imgEl.style.display = 'none';
+            placeholderEl.style.display = 'flex';
         }
-        selector.appendChild(option);
-        count++;
-    });
-
-    if (count === 0) {
-        const option = document.createElement('option');
-        option.textContent = "-- Sonuç Bulunamadı --";
-        option.disabled = true;
-        selector.appendChild(option);
     }
 }
 
-// --- SLIDER LOGIC ---
-function initSliders() {
-    // Link Slider <-> Input (Distance)
-    linkSliderInput(distSlider, distInput, distValLabel);
+// --- EVENT LISTENERS ---
+function setupEventListeners() {
+    syncInputs(distInput, distValLabel, targetDistInput);
+    syncInputs(speedSlider, speedValLabel, speedInput);
 
-    // Link Slider <-> Input (Speed)
-    linkSliderInput(speedSlider, speedInput, speedValLabel);
-
-    // Angle Slider
     angleSlider.addEventListener('input', () => {
         angleValLabel.textContent = angleSlider.value;
         calculateLead();
     });
-}
 
-function linkSliderInput(slider, input, labelEntry) {
-    slider.addEventListener('input', () => {
-        input.value = slider.value;
-        if (labelEntry) labelEntry.textContent = slider.value;
-        updateFlightTime();
-        calculateLead();
+    langSelector.addEventListener('change', (e) => updateLanguage(e.target.value));
+
+    openFilterBtn.addEventListener('click', () => openFilterModal('target'));
+    openAttackerFilterBtn.addEventListener('click', () => openFilterModal('attacker'));
+    closeModal.addEventListener('click', () => modal.style.display = "none");
+    window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = "none"; });
+    applyFiltersBtn.addEventListener('click', applyFilters);
+
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', () => {
+            if (input.id === 'target-distance' || input.id === 'dist-slider' || input.id === 'attacker-selector') {
+                updateFlightTime();
+            } else {
+                calculateLead();
+            }
+        });
+        if (input.type === 'range') {
+            input.addEventListener('input', () => {
+                calculateLead();
+            });
+        }
     });
 
-    input.addEventListener('input', () => {
-        slider.value = input.value;
-        if (labelEntry) labelEntry.textContent = input.value;
-        updateFlightTime();
-        calculateLead();
+    distInput.addEventListener('input', updateFlightTime);
+    targetDistInput.addEventListener('input', updateFlightTime);
+    attackerSelector.addEventListener('change', updateFlightTime);
+}
+
+function syncInputs(slider, label, numberInput) {
+    slider.addEventListener('input', () => {
+        label.textContent = slider.value;
+        numberInput.value = slider.value;
+    });
+    numberInput.addEventListener('input', () => {
+        let val = parseFloat(numberInput.value);
+        if (val > parseFloat(slider.max)) val = slider.max;
+        if (val < parseFloat(slider.min)) val = slider.min;
+        slider.value = val;
+        label.textContent = val;
     });
 }
 
 // --- CALCULATION LOGIC ---
+const PHYSICS_CONSTANT = 430;
+const LEAD_SCALE_CONSTANT = 30;
+
+function getAttackerVelocity() {
+    const val = attackerSelector.value;
+    if (val === 'custom') return 800;
+    const ship = attackerDatabase.find(s => s.id === val || s.name === val);
+    if (ship) return ship.velocity;
+    return parseFloat(val) || 800;
+}
+
+function calculateFlightTimeVal(distanceKm, velocity) {
+    if (!velocity || velocity <= 0) return 0;
+    return (distanceKm * PHYSICS_CONSTANT) / velocity;
+}
+
 function updateFlightTime() {
-    const velocity = parseFloat(attackerSelector.value);
-    const distanceKm = parseFloat(distInput.value);
-
-    // Only auto-calc flight time if we have valid Attacker & Distance
-    if (!isNaN(velocity) && !isNaN(distanceKm) && distanceKm > 0) {
-        // Simple Physics Approximation (WoW constants varies, but k=430 is a good fit)
-        const k = 430;
-        const estimatedTime = (distanceKm * k) / velocity;
+    const velocity = getAttackerVelocity();
+    const distanceKm = parseFloat(distInput.value) || 0;
+    if (velocity > 0 && distanceKm > 0) {
+        const estimatedTime = calculateFlightTimeVal(distanceKm, velocity);
         flightTimeInput.value = estimatedTime.toFixed(2);
-
-        // Visual flash
-        flightTimeInput.style.backgroundColor = '#1e3a8a';
-        setTimeout(() => flightTimeInput.style.backgroundColor = '#0f172a', 300);
     }
     calculateLead();
 }
 
 function calculateLead() {
+    const dist = parseFloat(distInput.value) || 0;
     const speed = parseFloat(speedInput.value) || 0;
-    const time = parseFloat(flightTimeInput.value) || 0;
+    const angle = parseInt(angleSlider.value) || 90;
     const scale = parseFloat(scaleInput.value) || 1.0;
-    const angle = parseFloat(angleSlider.value) || 90;
+    const velocity = getAttackerVelocity();
 
-    // Base Lead: Time * (Speed / 30)
-    // Adjusted by Scale Factor
-    let lead = time * (speed / 30) * scale;
+    const time = calculateFlightTimeVal(dist, velocity);
+    flightTimeInput.value = time.toFixed(2);
 
-    // Angle Correction: Lead * sin(Angle)
-    // 90 deg -> sin(90) = 1 (Full Lead)
-    // 0 deg -> sin(0) = 0 (No Lead)
-    const angleRad = angle * (Math.PI / 180);
-    lead = lead * Math.sin(angleRad);
+    const lead = (time * speed) / LEAD_SCALE_CONSTANT;
+    const angleRad = (angle * Math.PI) / 180;
+    const finalLead = lead * Math.sin(angleRad);
 
-    resultValue.textContent = lead.toFixed(2);
+    resultValue.textContent = (finalLead / scale).toFixed(2);
 
-    // Visual Pulse
     resultValue.style.color = '#38bdf8';
-    setTimeout(() => resultValue.style.color = '#38bdf8', 100);
+    setTimeout(() => resultValue.style.color = '#fff', 100);
+
+    drawVisualizer(finalLead / scale);
+}
+
+// --- VISUALIZER CANAVAS ---
+function drawVisualizer(leadTicks) {
+    const vCanvas = document.getElementById('visualizer-canvas');
+    if (!vCanvas) return;
+    const vCtx = vCanvas.getContext('2d');
+    const width = vCanvas.width;
+    const height = vCanvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    // Clear
+    vCtx.clearRect(0, 0, width, height);
+
+    // Background Gradient (Water/Sky suggestion)
+    const gradient = vCtx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, '#1e293b'); // Sky dark
+    gradient.addColorStop(0.5, '#475569'); // Horizon
+    gradient.addColorStop(1, '#0f172a'); // Water dark
+    vCtx.fillStyle = gradient;
+    vCtx.fillRect(0, 0, width, height);
+
+    // Draw Ticks (Static Crosshair)
+    // 600px / 40 ticks = 15 px per tick standard
+    const pxPerTick = 15;
+
+    vCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    vCtx.lineWidth = 2;
+    vCtx.beginPath();
+    vCtx.moveTo(0, centerY);
+    vCtx.lineTo(width, centerY);
+    vCtx.stroke();
+
+    vCtx.font = '10px Roboto';
+    vCtx.textAlign = 'center';
+    vCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+    // Major Ticks: 5, 10, 15, 20
+    for (let t = -20; t <= 20; t++) {
+        if (t === 0) continue;
+        const x = centerX + (t * pxPerTick);
+
+        let tickHeight = 5;
+        if (t % 5 === 0) tickHeight = 10;
+        if (t % 10 === 0) tickHeight = 15;
+
+        vCtx.beginPath();
+        vCtx.moveTo(x, centerY - tickHeight);
+        vCtx.lineTo(x, centerY + tickHeight);
+        vCtx.stroke();
+
+        if (t % 5 === 0) {
+            vCtx.fillText(Math.abs(t), x, centerY + tickHeight + 12);
+        }
+    }
+
+    // Center Triangle (The "0" mark / Crosshair Center)
+    vCtx.fillStyle = '#fff';
+    vCtx.beginPath();
+    vCtx.moveTo(centerX, centerY - 20); // Top caret
+    vCtx.lineTo(centerX - 6, centerY - 28);
+    vCtx.lineTo(centerX + 6, centerY - 28);
+    vCtx.fill();
+
+    // DRAW SHIP at the Calculated Tick Position
+    if (!isNaN(leadTicks)) {
+        const shipX = centerX + (leadTicks * pxPerTick);
+        const shipY = centerY;
+
+        const imgEl = document.getElementById('target-ship-img');
+
+        if (imgEl && imgEl.src && imgEl.style.display !== 'none') {
+            const sWidth = 80;
+            const sHeight = 40;
+            vCtx.globalAlpha = 0.9;
+            vCtx.drawImage(imgEl, shipX - (sWidth / 2), shipY - (sHeight / 2), sWidth, sHeight);
+            vCtx.globalAlpha = 1.0;
+        } else {
+            vCtx.fillStyle = '#ef4444';
+            vCtx.beginPath();
+            vCtx.moveTo(shipX - 30, shipY);
+            vCtx.lineTo(shipX + 30, shipY);
+            vCtx.lineTo(shipX + 40, shipY - 10);
+            vCtx.lineTo(shipX - 40, shipY - 10);
+            vCtx.fill();
+        }
+
+        vCtx.strokeStyle = '#38bdf8'; // Cyan highlight
+        vCtx.lineWidth = 2;
+        vCtx.beginPath();
+        vCtx.arc(shipX, shipY, 5, 0, Math.PI * 2);
+        vCtx.stroke();
+    }
 }
 
 // Event Listeners for Calculation
-attackerSelector.addEventListener('change', updateFlightTime);
 scaleInput.addEventListener('input', calculateLead);
-flightTimeInput.addEventListener('input', calculateLead); // Manual overwrite
+flightTimeInput.addEventListener('input', calculateLead);
 
-shipSelector.addEventListener('change', (e) => {
-    const val = e.target.value;
-    if (val !== 'custom') {
-        speedInput.value = val;
-        speedSlider.value = val;
-        speedValLabel.textContent = val;
-        calculateLead();
-    }
+attackerSelector.addEventListener('change', () => {
+    const val = attackerSelector.value;
+    updateShipDisplay('attacker', val);
+    calculateLead();
 });
 
-// --- TIMERS ---
-function initTimers() {
-    setupTimer(smokeBtn, 45);   // 45s Smoke
-    setupTimer(spotterBtn, 60); // 60s Spotter
-}
+shipSelector.addEventListener('change', () => {
+    const val = shipSelector.value;
+    updateShipDisplay('target', val);
 
-function setupTimer(btn, duration) {
-    let timeLeft = duration;
-    let timerId = null;
-    const originalText = btn.textContent;
-
-    btn.addEventListener('click', () => {
-        if (timerId) {
-            // Cancel Timer
-            clearInterval(timerId);
-            timerId = null;
-            btn.textContent = originalText;
-            btn.classList.remove('active');
-        } else {
-            // Start Timer
-            timeLeft = duration;
-            btn.classList.add('active');
-            btn.textContent = `${originalText.split('(')[0]} (${timeLeft}s)`;
-
-            timerId = setInterval(() => {
-                timeLeft--;
-                btn.textContent = `${originalText.split('(')[0]} (${timeLeft}s)`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerId);
-                    timerId = null;
-                    btn.textContent = "Bitti!";
-                    btn.classList.remove('active');
-                    setTimeout(() => btn.textContent = originalText, 2000);
-                }
-            }, 1000);
+    if (val !== 'custom') {
+        const ship = shipDatabase.find(s => s.id === val || s.name === val);
+        if (ship) {
+            speedInput.value = ship.speed;
+            speedSlider.value = ship.speed;
+            speedValLabel.textContent = ship.speed;
         }
-    });
-}
+    }
+    calculateLead();
+});
+
+
 
 // --- SIMULATION ---
 let gameState = {
     isRunning: false,
-    viewMode: 'side', // 'side' or 'top'
+    viewMode: 'side',
     score: 0,
     highScore: 0,
     misses: 0,
@@ -650,12 +690,11 @@ function saveHighScore() {
         gameState.highScore = gameState.score;
         localStorage.setItem('wow_aim_highscore', gameState.highScore);
         highScoreEl.textContent = `En İyi: ${gameState.highScore}`;
-        highScoreEl.style.color = '#fff'; // Flash effect
+        highScoreEl.style.color = '#fff';
         setTimeout(() => highScoreEl.style.color = '#f59e0b', 500);
     }
 }
 
-// Sim Helpers
 class Ship {
     constructor() {
         this.width = 60;
@@ -676,16 +715,13 @@ class Ship {
         ctx.fillStyle = this.color;
 
         if (mode === 'top') {
-            // Top-Down View (Arrow Shape)
             ctx.beginPath();
             if (this.direction === 1) {
-                // Moving Right
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x + this.width, this.y + this.height / 2);
                 ctx.lineTo(this.x, this.y + this.height);
                 ctx.lineTo(this.x + 10, this.y + this.height / 2);
             } else {
-                // Moving Left
                 ctx.moveTo(this.x + this.width, this.y);
                 ctx.lineTo(this.x, this.y + this.height / 2);
                 ctx.lineTo(this.x + this.width, this.y + this.height);
@@ -693,7 +729,6 @@ class Ship {
             }
             ctx.fill();
 
-            // Wake
             ctx.strokeStyle = 'rgba(255,255,255,0.2)';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -711,7 +746,6 @@ class Ship {
             ctx.stroke();
 
         } else {
-            // Side View (Rect)
             ctx.fillRect(this.x, this.y, this.width, this.height);
             ctx.fillStyle = '#cbd5e1';
             ctx.fillRect(this.x + (this.width * 0.3), this.y - 10, this.width * 0.4, 10);
@@ -747,14 +781,11 @@ class Shot {
     }
 }
 
-// Sim Loop
 function startSimulation() {
     if (gameState.isRunning) return;
     gameState.isRunning = true;
     gameState.score = 0;
     gameState.misses = 0;
-
-    // Clean old
     gameState.ships = [];
     gameState.shots = [];
 
@@ -772,7 +803,6 @@ function updateScore() {
     missesEl.textContent = `Iskalar: ${gameState.misses}`;
 }
 
-// Canvas Interaction
 canvas.addEventListener('mousedown', (e) => {
     if (!gameState.isRunning) return;
     const rect = canvas.getBoundingClientRect();
@@ -785,19 +815,18 @@ canvas.addEventListener('mousedown', (e) => {
 
 function checkCollisions(shot) {
     let hit = false;
-    // Splash
-    createExplosion(shot.tx, shot.ty, false); // Water splash always
+    createExplosion(shot.tx, shot.ty, false);
 
     gameState.ships.forEach(ship => {
         if (
             shot.tx >= ship.x &&
             shot.tx <= ship.x + ship.width &&
-            shot.ty >= ship.y - 10 && // Allow hitting superstructure
+            shot.ty >= ship.y - 10 &&
             shot.ty <= ship.y + ship.height + 10
         ) {
             hit = true;
-            ship.x = -999; // Kill
-            createExplosion(shot.tx, shot.ty, true); // Fire explosion
+            ship.x = -999;
+            createExplosion(shot.tx, shot.ty, true);
         }
     });
 
@@ -824,13 +853,11 @@ function drawCrosshair(ctx) {
 
     for (let i = 1; i < 20; i++) {
         let x = (canvas.width / 2) + (i * 40);
-        // Draw tick
         ctx.beginPath();
         ctx.moveTo(x, (canvas.height / 2) - 5);
         ctx.lineTo(x, (canvas.height / 2) + 5);
         ctx.stroke();
 
-        // Mirror
         x = (canvas.width / 2) - (i * 40);
         ctx.beginPath();
         ctx.moveTo(x, (canvas.height / 2) - 5);
@@ -844,10 +871,8 @@ function loop(timestamp) {
     const dt = (timestamp - gameState.lastTime) / 1000 || 0;
     gameState.lastTime = timestamp;
 
-    // Clear & BG
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Background Grid if Map Mode
     if (gameState.viewMode === 'top') {
         ctx.strokeStyle = 'rgba(255,255,255,0.05)';
         ctx.beginPath();
@@ -858,10 +883,8 @@ function loop(timestamp) {
         drawCrosshair(ctx);
     }
 
-    // Logic
     if (Math.random() < 0.01 && gameState.ships.length < 4) gameState.ships.push(new Ship());
 
-    // Ships
     for (let i = gameState.ships.length - 1; i >= 0; i--) {
         const s = gameState.ships[i];
         s.update(dt);
@@ -869,7 +892,6 @@ function loop(timestamp) {
         if (s.x < -100 || s.x > canvas.width + 100) gameState.ships.splice(i, 1);
     }
 
-    // Shots
     for (let i = gameState.shots.length - 1; i >= 0; i--) {
         const s = gameState.shots[i];
         if (s.update(dt)) {
@@ -880,7 +902,6 @@ function loop(timestamp) {
         }
     }
 
-    // Explosions
     for (let i = explosions.length - 1; i >= 0; i--) {
         const e = explosions[i];
         e.life -= dt * 2;
@@ -894,13 +915,11 @@ function loop(timestamp) {
     requestAnimationFrame(loop);
 }
 
-// Toggle View
 toggleViewBtn.addEventListener('click', () => {
     gameState.viewMode = gameState.viewMode === 'side' ? 'top' : 'side';
     toggleViewBtn.textContent = gameState.viewMode === 'side' ? "🗺️ Harita Modu" : "⚓ Normal Mod";
 });
 
-// Controls
 startSimBtn.addEventListener('click', () => {
     gameState.lastTime = performance.now();
     startSimulation();
@@ -915,7 +934,6 @@ resetSimBtn.addEventListener('click', () => {
     feedbackEl.textContent = "Simülasyon sıfırlandı.";
 });
 
-// Tab Switch
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
@@ -929,7 +947,6 @@ tabs.forEach(tab => {
     });
 });
 
-// Init
 init();
 
 // --- CUSTOM SHIP LOGIC ---
@@ -956,21 +973,13 @@ function initCustomShipLogic() {
 
         const newShip = { name: name, speed: speed, type: type, nation: nation, tier: tier };
 
-        // Add to global DB
         shipDatabase.push(newShip);
-
-        // Save to LocalStorage for persistence
         saveCustomShip(newShip);
 
-        // Refresh Selectors if context is 'target' (as we only added to shipDatabase for now)
-        // Note: Currently we only support adding Target ships via UI. 
-        // To support Attacker, we'd need a switcher or Assume custom ships are for Target.
-        // Let's assume Target for now as it's the primary use case.
         if (currentFilterContext === 'target') {
             populateSelectors('target');
         }
 
-        // Close Modal & Clear Inputs
         addShipModal.style.display = "none";
         document.getElementById('new-ship-name').value = "";
         document.getElementById('new-ship-speed').value = "";
@@ -997,5 +1006,5 @@ function loadCustomShips() {
     });
 }
 
-// Call Init Logic
 initCustomShipLogic();
+window.onload = init;
