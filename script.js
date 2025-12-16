@@ -67,6 +67,214 @@ function init() {
 
     // API Call
     // fetchShipsFromAPI(); // Disabled in favor of static ships.js which includes AttackerDB
+
+    initLanguage();
+}
+
+const translations = {
+    tr: {
+        "app-title": "⚓ Mermi Uçuş Süresi Hesaplayıcı",
+        "nav-calc": "Önleme (Lead) Hesaplayıcı",
+        "nav-sim": "Eğitim Simülasyonu",
+        "calc-title": "🎯 Mermi Uçuş Süresi Hesaplayıcı",
+        "calc-desc": "Gemi hızı, mesafe ve açıya göre nişan noktasını hesaplar.",
+        "attacker-title": "🔵 Sizin Geminiz",
+        "label-select-ship": "Gemini Seç",
+        "btn-filter": "🔍 Filtrele",
+        "label-distance": "Mesafe",
+        "label-scale": "Ölçek (Nişangah)",
+        "target-title": "🔴 Düşman Gemisi",
+        "label-select-target": "Düşman Seç",
+        "label-speed": "Hız",
+        "label-angle": "Açı",
+        "label-flight-time": "⏱️ Uçuş Süresi:",
+        "unit-seconds": "saniye",
+        "result-title": "Nişan Alman Gereken Yer:",
+        "unit-tick": "Tick (Birim)",
+        "timers-title": "⏱️ Taktik Zamanlayıcılar",
+        "btn-smoke": "💨 Duman (45s)",
+        "btn-spotter": "✈️ Uçak (60s)",
+        "sim-instruction": "Önleme vererek ateş etmek için ekrana tıkla!",
+        "footer-text": "WoW Aim Trainer - Eğitim Aracı",
+        "default-attacker": "GEMİNİ SEÇ",
+        "default-target": "DÜŞMAN GEMİSİNİ SEÇ",
+        "filter-modal-title-target": "🔍 Filtrele: Düşman Gemisi",
+        "filter-modal-title-attacker": "🔍 Filtrele: Sizin Geminiz",
+        "btn-apply-close": "Uygula ve Kapat",
+        "footer-credits": "Bu sayfa <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a> tarafından yapılmıştır. Geliştirilmeye devam etmektedir."
+    },
+    en: {
+        "app-title": "⚓ Shell Flight Time Calculator",
+        "nav-calc": "Lead Calculator",
+        "nav-sim": "Training Simulation",
+        "calc-title": "🎯 Shell Flight Time Calculator",
+        "calc-desc": "Calculates aim point based on ship speed, distance, and angle.",
+        "attacker-title": "🔵 Your Ship",
+        "label-select-ship": "Select Ship",
+        "btn-filter": "🔍 Filter",
+        "label-distance": "Distance",
+        "label-scale": "Scale (Crosshair)",
+        "target-title": "🔴 Enemy Ship",
+        "label-select-target": "Select Enemy",
+        "label-speed": "Speed",
+        "label-angle": "Angle",
+        "label-flight-time": "⏱️ Flight Time:",
+        "unit-seconds": "seconds",
+        "result-title": "Aim Point:",
+        "unit-tick": "Ticks",
+        "timers-title": "⏱️ Tactical Timers",
+        "btn-smoke": "💨 Smoke (45s)",
+        "btn-spotter": "✈️ Spotter (60s)",
+        "sim-instruction": "Click screen to fire with lead!",
+        "footer-text": "WoW Aim Trainer - Training Tool",
+        "default-attacker": "SELECT YOUR SHIP",
+        "default-target": "SELECT ENEMY SHIP",
+        "filter-modal-title-target": "🔍 Filter: Enemy Ship",
+        "filter-modal-title-attacker": "🔍 Filter: Your Ship",
+        "btn-apply-close": "Apply & Close",
+        "footer-credits": "This page was made by <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Work in progress."
+    },
+    it: {
+        "app-title": "⚓ Calcolatore Tempo di Volo",
+        "nav-calc": "Calcolatore Anticipo",
+        "nav-sim": "Simulazione Addestramento",
+        "calc-title": "🎯 Calcolatore Tempo di Volo",
+        "calc-desc": "Calcola il punto di mira in base a velocità nave, distanza e angolo.",
+        "attacker-title": "🔵 La Tua Nave",
+        "label-select-ship": "Seleziona Nave",
+        "btn-filter": "🔍 Filtra",
+        "label-distance": "Distanza",
+        "label-scale": "Scala (Mirino)",
+        "target-title": "🔴 Nave Nemica",
+        "label-select-target": "Seleziona Nemico",
+        "label-speed": "Velocità",
+        "label-angle": "Angolo",
+        "label-flight-time": "⏱️ Tempo di Volo:",
+        "unit-seconds": "secondi",
+        "result-title": "Punto di Mira:",
+        "unit-tick": "Tacche",
+        "timers-title": "⏱️ Timer Tattici",
+        "btn-smoke": "💨 Fumo (45s)",
+        "btn-spotter": "✈️ Ricognitore (60s)",
+        "sim-instruction": "Clicca per sparare con l'anticipo!",
+        "footer-text": "WoW Aim Trainer - Strumento di Addestramento",
+        "default-attacker": "SELEZIONA LA TUA NAVE",
+        "default-target": "SELEZIONA NAVE NEMICA",
+        "filter-modal-title-target": "🔍 Filtra: Nave Nemica",
+        "filter-modal-title-attacker": "🔍 Filtra: La Tua Nave",
+        "btn-apply-close": "Applica e Chiudi",
+        "footer-credits": "Questa pagina è stata creata da <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Lavori in corso."
+    },
+    de: {
+        "app-title": "⚓ Flugzeit-Rechner",
+        "nav-calc": "Vorhalte-Rechner",
+        "nav-sim": "Trainings-Simulation",
+        "calc-title": "🎯 Flugzeit-Rechner",
+        "calc-desc": "Berechnet den Zielpunkt basierend auf Schiffsgeschwindigkeit, Entfernung und Winkel.",
+        "attacker-title": "🔵 Dein Schiff",
+        "label-select-ship": "Schiff Wählen",
+        "btn-filter": "🔍 Filter",
+        "label-distance": "Entfernung",
+        "label-scale": "Skala (Fadenkreuz)",
+        "target-title": "🔴 Gegnerschiff",
+        "label-select-target": "Gegner Wählen",
+        "label-speed": "Geschwindigkeit",
+        "label-angle": "Winkel",
+        "label-flight-time": "⏱️ Flugzeit:",
+        "unit-seconds": "Sekunden",
+        "result-title": "Zielpunkt:",
+        "unit-tick": "Ticks",
+        "timers-title": "⏱️ Taktische Timer",
+        "btn-smoke": "💨 Nebel (45s)",
+        "btn-spotter": "✈️ Aufklärer (60s)",
+        "sim-instruction": "Klicke um mit Vorhalt zu feuern!",
+        "footer-text": "WoW Aim Trainer - Trainings-Tool",
+        "default-attacker": "WÄHLE DEIN SCHIFF",
+        "default-target": "WÄHLE GEGNERSCHIFF",
+        "filter-modal-title-target": "🔍 Filter: Gegnerschiff",
+        "filter-modal-title-attacker": "🔍 Filter: Dein Schiff",
+        "btn-apply-close": "Anwenden & Schließen",
+        "footer-credits": "Diese Seite wurde von <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a> erstellt. Noch in Entwicklung."
+    },
+    ru: {
+        "app-title": "⚓ Калькулятор Времени Полета",
+        "nav-calc": "Калькулятор Упреждения",
+        "nav-sim": "Тренировочная Симуляция",
+        "calc-title": "🎯 Калькулятор Времени Полета",
+        "calc-desc": "Рассчитывает точку прицеливания на основе скорости корабля, дистанции и угла.",
+        "attacker-title": "🔵 Ваш Корабль",
+        "label-select-ship": "Выбрать Корабль",
+        "btn-filter": "🔍 Фильтр",
+        "label-distance": "Дистанция",
+        "label-scale": "Масштаб (Прицел)",
+        "target-title": "🔴 Корабль Противника",
+        "label-select-target": "Выбрать Противника",
+        "label-speed": "Скорость",
+        "label-angle": "Угол",
+        "label-flight-time": "⏱️ Время Полета:",
+        "unit-seconds": "сек",
+        "result-title": "Точка Прицеливания:",
+        "unit-tick": "Тики",
+        "timers-title": "⏱️ Тактические Таймеры",
+        "btn-smoke": "💨 Дым (45с)",
+        "btn-spotter": "✈️ Корректировщик (60с)",
+        "sim-instruction": "Нажми на экран, чтобы выстрелить с упреждением!",
+        "footer-text": "WoW Aim Trainer - Инструмент Тренировки",
+        "default-attacker": "ВЫБЕРИТЕ ВАШ КОРАБЛЬ",
+        "default-target": "ВЫБЕРИТЕ ПРОТИВНИКА",
+        "filter-modal-title-target": "🔍 Фильтр: Корабль Противника",
+        "filter-modal-title-attacker": "🔍 Фильтр: Ваш Корабль",
+        "btn-apply-close": "Применить и Закрыть",
+        "footer-credits": "Эта страница создана <a href='https://wows-numbers.com/player/563017661,DespoticCAT/' target='_blank' class='credit-link'>DespoticCAT</a>. Разработка продолжается."
+    }
+};
+
+let currentLang = 'tr';
+
+function initLanguage() {
+    const selector = document.getElementById('lang-selector');
+    if (selector) {
+        selector.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+        // Set initial based on selector
+        setLanguage(selector.value);
+    }
+}
+
+function setLanguage(lang) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+
+    // Update all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
+        }
+    });
+
+    // Update dynamic elements (dropdown defaults)
+    updateDynamicText(lang);
+}
+
+function updateDynamicText(lang) {
+    const t = translations[lang];
+
+    // Update Selector Defaults
+    const attackerOpt = document.querySelector('#attacker-selector option[value="custom"]');
+    if (attackerOpt) attackerOpt.textContent = t["default-attacker"];
+
+    const targetOpt = document.querySelector('#ship-selector option[value="custom"]');
+    if (targetOpt) targetOpt.textContent = t["default-target"];
+
+    // Update Modal Titles if open (or static text)
+    // Note: Modal titles are dynamic in openModal(), we need to update that function too or just handle it here?
+    // Let's update openModal to use translation.
+
+    // Update Filter Button Text (Apply)
+    const applyBtn = document.getElementById('apply-filters-btn');
+    if (applyBtn) applyBtn.textContent = t["btn-apply-close"];
 }
 
 const API_APP_ID = "958ff05fbaa850b4c2bd0d171eb7e9cc";
@@ -217,8 +425,9 @@ function openModal(context) {
         cb.checked = filters[cb.name].includes(cb.value);
     });
 
+    const t = translations[currentLang];
     document.querySelector('.modal-header h3').textContent =
-        context === 'target' ? "🔍 Filtrele: Düşman Gemisi" : "🔍 Filtrele: Sizin Geminiz";
+        context === 'target' ? t["filter-modal-title-target"] : t["filter-modal-title-attacker"];
 
     filterModal.style.display = "block";
 }
@@ -567,8 +776,10 @@ function updateScore() {
 canvas.addEventListener('mousedown', (e) => {
     if (!gameState.isRunning) return;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
     gameState.shots.push(new Shot(x, y));
 });
 

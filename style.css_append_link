@@ -1,0 +1,12 @@
+
+.credit-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.credit-link:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
