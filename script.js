@@ -46,6 +46,7 @@ const feedbackEl = document.querySelector('.sim-feedback p');
 const startSimBtn = document.getElementById('start-sim-btn');
 const resetSimBtn = document.getElementById('reset-sim-btn');
 const toggleViewBtn = document.getElementById('toggle-view-btn');
+const testShotBtn = document.getElementById('test-shot-btn');
 
 
 
@@ -101,7 +102,9 @@ const translations = {
         "unit-seconds": "saniye",
         "unit-tick": "Tick (Birim)",
         "unit-knot": "knot",
+        "unit-knot": "knot",
         "btn-filter": "🔍 Filtrele",
+        "btn-test-shot": "🧪 Bu Atışı Test Et",
         "sim-instruction": "Önleme vererek ateş etmek için ekrana tıkla!",
         "footer-text": "WoW Aim Trainer - Eğitim Aracı",
         "label-nation": "Ülke:",
@@ -117,7 +120,7 @@ const translations = {
         "credits-post": "tarafından yapılmıştır. Geliştirilmeye devam etmektedir."
     },
     en: {
-        "app-title": "World of Warships Aim Calculator",
+        "app-title": "WORLD OF WARSHIPS AIM CALCULATOR",
         "nav-calc": "Lead Calculator",
         "nav-sim": "Training Simulation",
         "attacker-title": "🔵 Your Ship",
@@ -135,7 +138,9 @@ const translations = {
         "unit-seconds": "seconds",
         "unit-tick": "Ticks",
         "unit-knot": "knots",
+        "unit-knot": "knots",
         "btn-filter": "🔍 Filter",
+        "btn-test-shot": "🧪 Test This Shot",
         "sim-instruction": "Click on screen to shoot with lead!",
         "footer-text": "WoW Aim Trainer - Educational Tool",
         "label-nation": "Nation:",
@@ -169,7 +174,9 @@ const translations = {
         "unit-seconds": "secondi",
         "unit-tick": "Tacche",
         "unit-knot": "nodi",
+        "unit-knot": "nodi",
         "btn-filter": "🔍 Filtra",
+        "btn-test-shot": "🧪 Prova Questo Colpo",
         "sim-instruction": "Clicca sullo schermo per sparare con anticipo!",
         "footer-text": "WoW Aim Trainer - Strumento Educativo",
         "label-nation": "Nazione:",
@@ -666,6 +673,7 @@ shipSelector.addEventListener('change', () => {
 
 
 // --- SIMULATION ---
+// --- SIMULATION ---
 let gameState = {
     isRunning: false,
     viewMode: 'side',
@@ -674,7 +682,12 @@ let gameState = {
     misses: 0,
     ships: [],
     shots: [],
-    lastTime: 0
+    lastTime: 0,
+    // Scenario Props
+    isTestMode: false,
+    scenarioDistance: 15.0,
+    scenarioSpeed: 30,
+    scenarioFlightTime: 5.0
 };
 
 function loadHighScore() {
@@ -699,8 +712,12 @@ class Ship {
     constructor() {
         this.width = 60;
         this.height = 15;
-        this.y = Math.random() * (canvas.height - 100) + 50;
-        this.speed = (Math.random() * 20 + 10);
+        this.width = 60;
+        this.height = 15;
+        // Center on Y-Axis
+        this.y = (canvas.height / 2) - (this.height / 2);
+        // USE SCENARIO SPEED
+        this.speed = gameState.scenarioSpeed; // Use global scenario speed
         this.direction = Math.random() > 0.5 ? 1 : -1;
         this.x = this.direction === 1 ? -this.width : canvas.width + this.width;
         this.color = '#94a3b8';
@@ -757,8 +774,8 @@ class Shot {
     constructor(tx, ty) {
         this.tx = tx;
         this.ty = ty;
-        this.flightTime = 3.0;
-        this.timer = 3.0;
+        this.flightTime = parseFloat(gameState.scenarioFlightTime);
+        this.timer = this.flightTime;
     }
 
     update(dt) {
@@ -787,15 +804,55 @@ function startSimulation() {
     gameState.score = 0;
     gameState.misses = 0;
     gameState.ships = [];
+    gameState.ships = [];
     gameState.shots = [];
+    // Force spawn immediately
+    gameState.ships.push(new Ship());
+
+    // GENERATE SCENARIO
+    generateScenario();
 
     updateScore();
-    feedbackEl.textContent = "Dikkat: Gemiler farklı hızlarda hareket ediyor!";
+    feedbackEl.textContent = "Verilen değerlere göre hesapla ve ateş et!";
     loop(0);
+}
+
+// GENERATE SCENARIO
+// If test mode is active, we don't randomize, we just use existing values
+// BUT if ship dies in test mode, do we want to Respawn with SAME values? Yes.
+function generateScenario() {
+    if (gameState.isTestMode) {
+        // KEEP EXISTING VALUES (Test Loop)
+    } else {
+        // RANDOMIZE
+        // 1. Random Distance (10 - 20 km)
+        gameState.scenarioDistance = (Math.random() * 10 + 10).toFixed(1);
+
+        // 2. Random Speed (20 - 40 kts)
+        gameState.scenarioSpeed = Math.floor(Math.random() * 20 + 20);
+
+        // 3. Calculate Flight Time
+        const velocity = 800; // Average
+        gameState.scenarioFlightTime = (gameState.scenarioDistance * 430 / velocity).toFixed(2);
+    }
+
+    // UPDATE UI
+    document.getElementById('scenario-info').style.display = 'block';
+    document.getElementById('sc-dist').textContent = gameState.scenarioDistance;
+    document.getElementById('sc-speed').textContent = gameState.scenarioSpeed;
+    document.getElementById('sc-time').textContent = gameState.scenarioFlightTime;
+
+    // Update Feedback Text
+    if (gameState.isTestMode) {
+        feedbackEl.textContent = `TEST MODU: ${gameState.scenarioSpeed} kts, ${gameState.scenarioDistance} km`;
+    } else {
+        feedbackEl.textContent = "Verilen değerlere göre hesapla ve ateş et!";
+    }
 }
 
 function stopSimulation() {
     gameState.isRunning = false;
+    document.getElementById('scenario-info').style.display = 'none';
 }
 
 function updateScore() {
@@ -845,25 +902,88 @@ function createExplosion(x, y, isHit) {
 }
 
 function drawCrosshair(ctx) {
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    const centerY = canvas.height / 2;
+    const centerX = canvas.width / 2;
+
+    // Main Line
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height / 2);
-    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(canvas.width, centerY);
     ctx.stroke();
 
-    for (let i = 1; i < 20; i++) {
-        let x = (canvas.width / 2) + (i * 40);
-        ctx.beginPath();
-        ctx.moveTo(x, (canvas.height / 2) - 5);
-        ctx.lineTo(x, (canvas.height / 2) + 5);
-        ctx.stroke();
+    // DYNAMIC TICKS (Seconds)
+    // 1 Second = speed * 3 pixels
+    const speed = gameState.scenarioSpeed || 30; // Fallback
+    const pxPerSec = speed * 3;
 
-        x = (canvas.width / 2) - (i * 40);
-        ctx.beginPath();
-        ctx.moveTo(x, (canvas.height / 2) - 5);
-        ctx.lineTo(x, (canvas.height / 2) + 5);
-        ctx.stroke();
+    ctx.font = '12px Roboto'; // Bigger font
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    // Draw Ticks for up to 15 seconds
+    for (let t = 1; t <= 15; t++) {
+        const isMajor = t % 5 === 0;
+
+        // Right Side
+        let x = centerX + (t * pxPerSec);
+        if (x < canvas.width) {
+            // Tick
+            ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+            ctx.beginPath();
+            ctx.moveTo(x, centerY - (isMajor ? 8 : 4));
+            ctx.lineTo(x, centerY + (isMajor ? 8 : 4));
+            ctx.stroke();
+
+            // Label
+            // Show every second, but major ones slightly bigger/different?
+            // User requested seeing numbers.
+            // Let's show every second if possible, but minimal
+            // If pxPerSec is small (slow speed), it might crowd.
+            // Safety check: if pxPerSec < 15, maybe skip odd numbers
+
+            if (pxPerSec > 15 || isMajor || t % 2 === 0) {
+                ctx.fillStyle = '#ffffff';
+                // Text Shadow for visibility
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 4;
+                ctx.lineWidth = 3;
+
+                ctx.fillText(`${t}`, x, centerY + 12);
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Left Side
+        x = centerX - (t * pxPerSec);
+        if (x > 0) {
+            // Tick
+            ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+            ctx.beginPath();
+            ctx.moveTo(x, centerY - (isMajor ? 8 : 4));
+            ctx.lineTo(x, centerY + (isMajor ? 8 : 4));
+            ctx.stroke();
+
+            if (pxPerSec > 15 || isMajor || t % 2 === 0) {
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 4;
+
+                ctx.fillText(`${t}`, x, centerY + 12);
+
+                ctx.shadowBlur = 0;
+            }
+        }
     }
+
+    // Center Mark
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 3, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 function loop(timestamp) {
@@ -883,13 +1003,24 @@ function loop(timestamp) {
         drawCrosshair(ctx);
     }
 
-    if (Math.random() < 0.01 && gameState.ships.length < 4) gameState.ships.push(new Ship());
+    // Check for scenario ship respawn
+    if (gameState.ships.length === 0) {
+        // Prepare new scenario delay? Or instant?
+        // Let's do instant for now but maybe 1s delay
+        generateScenario();
+        gameState.ships.push(new Ship());
+    }
 
     for (let i = gameState.ships.length - 1; i >= 0; i--) {
         const s = gameState.ships[i];
         s.update(dt);
         s.draw(ctx, gameState.viewMode);
-        if (s.x < -100 || s.x > canvas.width + 100) gameState.ships.splice(i, 1);
+        // If ship goes off screen, just remove it. Loop will respawn new one next frame
+        if (s.x < -100 || s.x > canvas.width + 100) {
+            gameState.ships.splice(i, 1);
+            gameState.misses++;
+            updateScore();
+        }
     }
 
     for (let i = gameState.shots.length - 1; i >= 0; i--) {
@@ -920,7 +1051,42 @@ toggleViewBtn.addEventListener('click', () => {
     toggleViewBtn.textContent = gameState.viewMode === 'side' ? "🗺️ Harita Modu" : "⚓ Normal Mod";
 });
 
+// START STANDARD DRILL
 startSimBtn.addEventListener('click', () => {
+    gameState.isTestMode = false;
+    gameState.lastTime = performance.now();
+    startSimulation();
+});
+
+// START TEST MODE
+testShotBtn.addEventListener('click', () => {
+    // 1. Get Values
+    const dist = parseFloat(distInput.value) || 15.0;
+    const speed = parseInt(speedInput.value) || 30;
+
+    // Calculate flight time again to be sure (or read input)
+    const velocity = getAttackerVelocity();
+    const flightTime = calculateFlightTimeVal(dist, velocity).toFixed(2);
+
+    // 2. Set Game State
+    gameState.isTestMode = true;
+    gameState.scenarioDistance = dist.toFixed(1);
+    gameState.scenarioSpeed = speed;
+    gameState.scenarioFlightTime = flightTime;
+
+    // 3. Switch Tab
+    tabs.forEach(t => t.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+
+    // Find Sim tab
+    const simTabBtn = document.querySelector('[data-tab="simulation"]');
+    const simContent = document.getElementById('simulation');
+
+    if (simTabBtn) simTabBtn.classList.add('active');
+    if (simContent) simContent.classList.add('active');
+
+    // 4. Start Sim
+    stopSimulation(); // Reset if running
     gameState.lastTime = performance.now();
     startSimulation();
 });

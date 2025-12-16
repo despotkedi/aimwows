@@ -118,32 +118,15 @@
       }]
     }
     </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "World of Warships Aim Calculator",
-      "url": "https://despotkedi.github.io/aimwows/",
-      "image": "https://despotkedi.github.io/aimwows/og-image.jpg",
-      "description": "Calculates shell flight time and lead for World of Warships. Includes aiming training simulation.",
-      "applicationCategory": "GameApplication",
-      "operatingSystem": "Web Browser",
-      "author": {
-          "@type": "Person",
-          "name": "DespoticCAT",
-          "url": "https://wows-numbers.com/player/563017661,DespoticCAT/"
-      },
-      "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-      }
-    }
-    </script>
-    <!-- GOOGLE ADSENSE -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1189639952615098"
-        crossorigin="anonymous"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F9HBHJDH3M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
+        gtag('config', 'G-F9HBHJDH3M');
+    </script>
 </head>
 
 <body>
@@ -194,10 +177,6 @@
                                         id="attacker-ship-velocity">-</span> m/s
                                 </p>
                             </div>
-                        </div>
-
-                        <!-- ADSENSE PLACEHOLDER (LEFT) -->
-                        <div class="ad-placeholder" style="display: none;">
                         </div>
                     </div>
 
@@ -288,6 +267,10 @@
                             <span id="result-value">--</span>
                             <span class="unit" data-i18n="unit-tick">Tick (Birim)</span>
 
+                            <button id="test-shot-btn" class="action-btn"
+                                style="width: 100%; margin-top: 15px; background: #ea580c;" data-i18n="btn-test-shot">🧪
+                                Bu Atışı Test Et</button>
+
                             <!-- Visualizer -->
                             <div class="visualizer-container"
                                 style="width: 100%; margin-top: 15px; background: #000; border: 1px solid #334155; border-radius: 8px; overflow: hidden; position: relative;">
@@ -321,10 +304,6 @@
                                 </p>
                             </div>
                         </div>
-
-                        <!-- ADSENSE PLACEHOLDER (RIGHT) -->
-                        <div class="ad-placeholder" style="display: none;">
-                        </div>
                     </div>
                 </div>
             </section>
@@ -332,6 +311,16 @@
             <!-- SIMULATION SECTION -->
             <section id="simulation" class="tab-content">
                 <div class="simulation-container">
+                    <!-- SCENARIO INFO OVERLAY -->
+                    <div id="scenario-info" class="scenario-panel" style="display: none;">
+                        <h3>📋 GÖREV</h3>
+                        <div class="scenario-details">
+                            <p>🎯 Mesafe: <span id="sc-dist" class="val">--</span> km</p>
+                            <p>🚄 Hız: <span id="sc-speed" class="val">--</span> kts</p>
+                            <p>⏱️ Uçuş Süresi: <span id="sc-time" class="val">--</span> s</p>
+                        </div>
+                        <div class="hint-text">Bu değerlere göre nişan al!</div>
+                    </div>
                     <div class="sim-controls">
                         <div class="control-item">
                             <span id="sim-high-score" style="color: #f59e0b;">En İyi: 0</span>
@@ -461,9 +450,9 @@
                             <option value="USA">ABD</option>
                             <option value="Germany">Almanya</option>
                             <option value="USSR">SSCB</option>
-                            <option value="UK">İngiltere</option>
+                            <option value="UK">Ingiltere</option>
                             <option value="France">Fransa</option>
-                            <option value="Italy">İtalya</option>
+                            <option value="Italy">Italya</option>
                             <option value="Pan-Asia">Pan-Asya</option>
                             <option value="Other">Diğer</option>
                         </select>
