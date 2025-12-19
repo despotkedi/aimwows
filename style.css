@@ -824,3 +824,61 @@ footer {
     height: 100%;
     display: block;
 }
+
+/* TWITCH SIDE BANNERS */
+.twitch-side-banner {
+    position: fixed;
+    top: 120px;
+    width: 100px;
+    height: 180px;
+    padding: 15px 10px;
+    background: linear-gradient(180deg, #9146FF 0%, #6441A4 100%);
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(145, 70, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.twitch-side-banner:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(145, 70, 255, 0.6);
+}
+
+.twitch-side-banner.left-banner {
+    left: 10px;
+}
+
+.twitch-side-banner.right-banner {
+    right: 10px;
+}
+
+.twitch-side-banner .twitch-icon {
+    font-size: 2.5rem;
+}
+
+.twitch-side-banner .twitch-text {
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.twitch-side-banner .twitch-name {
+    color: #E0D0FF;
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Hide on smaller screens */
+@media (max-width: 1500px) {
+    .twitch-side-banner {
+        display: none;
+    }
+}
