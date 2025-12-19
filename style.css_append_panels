@@ -1,0 +1,94 @@
+
+/* --- Main Layout with Side Panels --- */
+.main-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px; /* Wider to fit panels */
+    margin: 0 auto;
+}
+
+.side-panel {
+    flex: 0 0 280px; /* Fixed width for side panels */
+    transition: all 0.3s ease;
+}
+
+/* Info Box Styling */
+.ship-info-box {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.ship-image-container {
+    width: 100%;
+    height: 160px;
+    background: #0f172a;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+
+.ship-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.ship-placeholder {
+    font-size: 3rem;
+    color: #475569;
+    font-weight: bold;
+}
+
+.ship-info-box h3 {
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 10px;
+}
+
+.ship-details {
+    text-align: left;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+
+.ship-details p {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ship-details .label {
+    color: #94a3b8;
+}
+
+/* Responsive: Collapse to stack on smaller screens */
+@media (max-width: 1200px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .side-panel {
+        width: 100%;
+        max-width: 500px; /* Match card width */
+        order: 2; /* Put panels below calculator on tablet/mobile */
+    }
+    
+    /* Order: Calculator first, then Attacker Panel, then Target Panel */
+    .card {
+        order: 1;
+    }
+}

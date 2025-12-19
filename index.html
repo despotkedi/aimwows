@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Primary Meta Tags -->
+    <title>World of Warships Aim Calculator | Shell Flight Time & Lead Calculator</title>
+    <meta name="title" content="World of Warships Aim Calculator | Shell Flight Time & Lead Calculator">
+    <meta name="description"
+        content="Free WoWs aim calculator and training tool. Calculate shell flight time, lead, and improve your aiming skills. Supports all ships, multi-language, with interactive simulation.">
+    <meta name="keywords"
+        content="world of warships, wows, aim calculator, lead calculator, shell flight time, battleship calculator, naval artillery, aiming guide, training tool">
+    <meta name="author" content="DespoticCAT">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish, English, Italian, German, Russian">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://despotkedi.github.io/aimwows/">
+
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="tr" href="https://despotkedi.github.io/aimwows/?lang=tr">
+    <link rel="alternate" hreflang="en" href="https://despotkedi.github.io/aimwows/?lang=en">
+    <link rel="alternate" hreflang="it" href="https://despotkedi.github.io/aimwows/?lang=it">
+    <link rel="alternate" hreflang="de" href="https://despotkedi.github.io/aimwows/?lang=de">
+    <link rel="alternate" hreflang="ru" href="https://despotkedi.github.io/aimwows/?lang=ru">
+    <link rel="alternate" hreflang="x-default" href="https://despotkedi.github.io/aimwows/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://despotkedi.github.io/aimwows/">
+    <meta property="og:title" content="World of Warships Aim Calculator | Shell Flight Time & Lead Calculator">
+    <meta property="og:description"
+        content="Free WoWs aim calculator and training tool. Calculate shell flight time, lead, and improve your aiming skills. Interactive simulation included!">
+    <meta property="og:image" content="https://despotkedi.github.io/aimwows/og-image.jpg">
+    <meta property="og:site_name" content="WoWs Aim Calculator">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://despotkedi.github.io/aimwows/">
+    <meta name="twitter:title" content="World of Warships Aim Calculator">
+    <meta name="twitter:description"
+        content="Free WoWs aim calculator and training tool. Calculate shell flight time, lead, and improve your aiming skills.">
+    <meta name="twitter:image" content="https://despotkedi.github.io/aimwows/twitter-image.jpg">
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://wows-gloss-icons.wgcdn.co">
+    <link rel="dns-prefetch" href="https://wows-gloss-icons.wgcdn.co">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "World of Warships Aim Calculator",
+      "alternateName": "WoWs Lead Calculator",
+      "url": "https://despotkedi.github.io/aimwows/",
+      "description": "Free online calculator for World of Warships players to calculate shell flight time, lead, and improve aiming accuracy. Includes interactive training simulation.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Shell flight time calculation",
+        "Lead calculator",
+        "Interactive aiming simulation",
+        "Multi-language support (TR, EN, IT, DE, RU)",
+        "550+ ships database",
+        "Real-time ship statistics"
+      ],
+      "inLanguage": ["tr", "en", "it", "de", "ru"],
+      "author": {
+        "@type": "Person",
+        "name": "DespoticCAT",
+        "url": "https://wows-numbers.com/player/563017661,DespoticCAT/"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "DespoticCAT"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://despotkedi.github.io/aimwows/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator",
+        "item": "https://despotkedi.github.io/aimwows/#calculator"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Simulation",
+        "item": "https://despotkedi.github.io/aimwows/#simulation"
+      }]
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F9HBHJDH3M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-F9HBHJDH3M');
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1189639952615098"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1 data-i18n="app-title">
+                <img src="wows-logo.png" alt="World of Warships Logo"
+                    style="height: 40px; vertical-align: middle; margin-right: 10px;">
+                Mermi Uçuş Süresi Hesaplayıcı
+            </h1>
+            <div class="lang-container">
+                <select id="lang-selector">
+                    <option value="tr">🇹🇷 TR</option>
+                    <option value="en" selected>🇺🇸 EN</option>
+                    <option value="it">🇮🇹 IT</option>
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="ru">🇷🇺 RU</option>
+                    <option value="ja">🇯🇵 JA</option>
+                    <option value="zh">🇨🇳 ZH</option>
+                </select>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-tab="calculator" data-i18n="nav-calc">Önleme (Lead)
+                    Hesaplayıcı</button>
+                <button class="nav-btn" data-tab="simulation" data-i18n="nav-sim">Eğitim Simülasyonu</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- CALCULATOR SECTION -->
+            <section id="calculator" class="tab-content active">
+                <div class="main-layout">
+                    <!-- LEFT PANEL: Attacker Info -->
+                    <div class="side-panel left-panel">
+                        <div id="attacker-info-box" class="ship-info-box">
+                            <div class="ship-image-container">
+                                <img id="attacker-ship-img" src="" alt="Your Ship Image" loading="lazy"
+                                    style="display: none;">
+                                <div id="attacker-ship-placeholder" class="ship-placeholder">?</div>
+                            </div>
+                            <h3 id="attacker-ship-name" data-i18n="text-select-ship">Gemini Seç</h3>
+                            <div class="ship-details">
+                                <p><span class="label" data-i18n="label-nation">Ülke:</span> <span
+                                        id="attacker-ship-nation">-</span></p>
+                                <p><span class="label" data-i18n="label-type">Tip:</span> <span
+                                        id="attacker-ship-type">-</span></p>
+                                <p><span class="label" data-i18n="label-velocity">Mermi Hızı:</span> <span
+                                        id="attacker-ship-velocity">-</span> m/s
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CENTER: Calculator Card -->
+                    <div class="card">
+                        <h2 data-i18n="calc-title">🎯 Mermi Uçuş Süresi Hesaplayıcı</h2>
+                        <p class="description" data-i18n="calc-desc">Gemi hızı, mesafe ve açıya göre nişan noktasını
+                            hesaplar.</p>
+
+                        <div class="calc-grid">
+                            <!-- LEFT COLUMN: Attacker Info -->
+                            <div class="grid-col">
+                                <h3 data-i18n="attacker-title">🔵 Sizin Geminiz</h3>
+                                <div class="input-group">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <label for="attacker-selector" data-i18n="label-select-ship">Gemini Seç</label>
+                                        <button id="open-attacker-filter-btn" class="action-btn small secondary"
+                                            style="margin: 0; padding: 4px 10px; font-size: 0.8rem;"
+                                            data-i18n="btn-filter">🔍 Filtrele</button>
+                                    </div>
+                                    <input type="text" id="attacker-search" class="ship-search-input"
+                                        data-i18n-placeholder="placeholder-search"
+                                        style="width: 100%; margin: 5px 0; padding: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px;">
+                                    <select id="attacker-selector">
+                                        <option value="custom">GEMİNİ SEÇ</option>
+                                        <!-- Options by JS -->
+                                    </select>
+                                </div>
+
+                                <div class="input-group range-group">
+                                    <label for="target-distance"><span data-i18n="label-distance">Mesafe</span> (km)
+                                        <span id="dist-val">15.0</span></label>
+                                    <div class="range-container">
+                                        <input type="range" id="dist-slider" min="1" max="30" step="0.1" value="15">
+                                        <input type="number" id="target-distance" placeholder="15.0" step="0.1" min="0"
+                                            max="40" value="15">
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="scale-factor" data-i18n="label-scale">Ölçek (Nişangah)</label>
+                                    <input type="number" id="scale-factor" value="1.0" step="0.1">
+                                </div>
+                            </div>
+
+                            <!-- RIGHT COLUMN: Target Info -->
+                            <div class="grid-col">
+                                <h3 data-i18n="target-title">🔴 Düşman Gemisi</h3>
+                                <div class="input-group">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <label for="ship-selector" data-i18n="label-select-target">Düşman Seç</label>
+                                        <button id="open-filter-btn" class="action-btn small secondary"
+                                            style="margin: 0; padding: 4px 10px; font-size: 0.8rem;"
+                                            data-i18n="btn-filter">🔍 Filtrele</button>
+                                    </div>
+                                    <input type="text" id="target-search" class="ship-search-input"
+                                        data-i18n-placeholder="placeholder-search"
+                                        style="width: 100%; margin: 5px 0; padding: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px;">
+                                    <select id="ship-selector">
+                                        <option value="custom">DÜŞMAN GEMİSİNİ SEÇ</option>
+                                        <!-- Options will be populated by JS -->
+                                    </select>
+                                </div>
+
+                                <div class="input-group range-group">
+                                    <label for="target-speed"><span data-i18n="label-speed">Hız</span> (knot) <span
+                                            id="speed-val">30</span></label>
+                                    <div class="range-container">
+                                        <input type="range" id="speed-slider" min="0" max="60" step="1" value="30">
+                                        <input type="number" id="target-speed" placeholder="30" min="0" max="60"
+                                            value="30">
+                                    </div>
+                                </div>
+
+                                <div class="input-group range-group">
+                                    <label for="angle-slider"><span data-i18n="label-angle">Açı</span>: <span
+                                            id="angle-val">90</span>°</label>
+                                    <input type="range" id="angle-slider" min="0" max="90" step="5" value="90">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FULL WIDTH INFO -->
+                        <div class="flight-info-bar">
+                            <label for="flight-time" data-i18n="label-flight-time">⏱️ Uçuş Süresi:</label>
+                            <input type="number" id="flight-time" placeholder="Hesaplanıyor..."
+                                data-i18n-placeholder="placeholder-calculating" step="0.1" readonly>
+                            <span data-i18n="unit-seconds">saniye</span>
+                        </div>
+
+                        <!-- RESULT -->
+                        <div class="result-box">
+                            <h3 data-i18n="result-title">Nişan Alman Gereken Yer:</h3>
+                            <span id="result-value">--</span>
+                            <span class="unit" data-i18n="unit-tick">Tick (Birim)</span>
+
+                            <button id="test-shot-btn" class="action-btn"
+                                style="width: 100%; margin-top: 15px; background: #ea580c;" data-i18n="btn-test-shot">🧪
+                                Bu Atışı Test Et</button>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT PANEL: Target Info -->
+                    <div class="side-panel right-panel">
+                        <div id="target-info-box" class="ship-info-box">
+                            <div class="ship-image-container">
+                                <img id="target-ship-img" src="" alt="Enemy Ship Image" loading="lazy"
+                                    style="display: none;">
+                                <div id="target-ship-placeholder" class="ship-placeholder">?</div>
+                            </div>
+                            <h3 id="target-ship-name" data-i18n="text-select-target">Düşman Seç</h3>
+                            <div class="ship-details">
+                                <p><span class="label" data-i18n="label-nation">Ülke:</span> <span
+                                        id="target-ship-nation">-</span></p>
+                                <p><span class="label" data-i18n="label-type">Tip:</span> <span
+                                        id="target-ship-type">-</span></p>
+                                <p><span class="label" data-i18n="label-max-speed">Max Hız:</span> <span
+                                        id="target-ship-max-speed">-</span> <span data-i18n="unit-knot">knot</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISUALIZER PANEL - FULL WIDTH OUTSIDE CARD -->
+                <div class="visualizer-panel">
+                    <h3 style="text-align: center; color: #94a3b8; margin-bottom: 10px; font-size: 0.9rem;"
+                        data-i18n="visualizer-title">
+                        📊 Görsel Önleme Göstergesi
+                    </h3>
+                    <div class="visualizer-container"
+                        style="width: 100%; background: #000; border: 1px solid #334155; border-radius: 8px; overflow: hidden; position: relative;">
+                        <canvas id="visualizer-canvas" width="1200" height="300"
+                            style="width: 100%; display: block; cursor: crosshair;"></canvas>
+                        <div style="position: absolute; bottom: 5px; right: 5px; font-size: 10px; color: #64748b;"
+                            data-i18n="interactive-mode">
+                            Interactive Mode</div>
+                    </div>
+
+                    <!-- Interactive Controls - Lead Indicator Toggle -->
+                    <div
+                        style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; align-items: center;">
+                        <button id="toggle-lead-indicator" class="action-btn small" style="background: #f59e0b;">
+                            <span data-i18n="hide-helper">👁️ Yardımcıyı Gizle</span>
+                        </button>
+                        <span style="font-size: 0.85rem; color: #94a3b8;" data-i18n="crosshair-helper">Kırmızı nişangah
+                            yardımcısı</span>
+                    </div>
+
+                    <!-- Hidden start/stop buttons -->
+                    <div
+                        style="display: none; gap: 10px; margin-top: 10px; justify-content: center; align-items: center;">
+                        <button id="viz-start-btn" class="action-btn small" style="background: #22c55e;">
+                            ▶️ Başlat
+                        </button>
+                        <button id="viz-reset-btn" class="action-btn small" style="background: #64748b;">
+                            🔄 Sıfırla
+                        </button>
+                        <span style="font-size: 0.85rem; color: #94a3b8;">Tıklayarak mermi atın!</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SIMULATION SECTION -->
+            <section id="simulation" class="tab-content">
+                <div class="simulation-container">
+                    <!-- SCENARIO INFO OVERLAY -->
+                    <div id="scenario-info" class="scenario-panel" style="display: none;">
+                        <h3 data-i18n="sim-task">📋 GÖREV</h3>
+                        <div class="scenario-details">
+                            <p><span data-i18n="sim-distance">🎯 Mesafe</span>: <span id="sc-dist" class="val">--</span>
+                                km</p>
+                            <p><span data-i18n="sim-speed">🚄 Hız</span>: <span id="sc-speed" class="val">--</span> kts
+                            </p>
+                            <p><span data-i18n="sim-time">⏱️ Uçuş Süresi</span>: <span id="sc-time"
+                                    class="val">--</span> s</p>
+                        </div>
+                        <div class="hint-text" data-i18n="sim-hint">Bu değerlere göre nişan al!</div>
+                    </div>
+                    <div class="sim-controls">
+                        <div class="control-item">
+                            <span id="sim-high-score" style="color: #f59e0b;" data-i18n="sim-highscore">En İyi: 0</span>
+                        </div>
+                        <div class="control-item">
+                            <span id="sim-score" data-i18n="sim-score">Puan: 0</span>
+                        </div>
+                        <div class="control-item">
+                            <span id="sim-misses" data-i18n="sim-misses">Iskalar: 0</span>
+                        </div>
+                        <button id="toggle-view-btn" class="action-btn small secondary" title="Harita / Normal Görünüm"
+                            data-i18n="btn-map">🗺️ Harita</button>
+                        <button id="start-sim-btn" class="action-btn small" data-i18n="btn-start">Başla</button>
+                        <button id="reset-sim-btn" class="action-btn small secondary"
+                            data-i18n="btn-reset">Sıfırla</button>
+                    </div>
+                    <canvas id="aim-canvas" width="800" height="400"></canvas>
+                    <div class="sim-feedback">
+                        <p data-i18n="sim-instruction">Önleme vererek ateş etmek için ekrana tıkla!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p data-i18n="footer-text">WoW Aim Trainer - Eğitim Aracı</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                <span data-i18n="credits-pre">Bu sayfa</span> <a
+                    href="https://wows-numbers.com/player/563017661,DespoticCAT/" target="_blank"
+                    style="color: #38bdf8; text-decoration: none; font-weight: bold;">DespoticCAT</a> <span
+                    data-i18n="credits-post">tarafından yapılmıştır. Geliştirilmeye devam etmektedir.</span>
+            </p>
+        </footer>
+    </div>
+    <!-- FILTER MODAL -->
+    <div id="filter-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔍 Gemi Filtresi</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+
+            <div class="filter-group">
+                <h4>Gemi Sınıfı</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="type" value="DD" checked> DD (Destroyer)</label>
+                    <label><input type="checkbox" name="type" value="CA" checked> CA/CL (Cruiser)</label>
+                    <label><input type="checkbox" name="type" value="BB" checked> BB (Battleship)</label>
+                    <label><input type="checkbox" name="type" value="CV" checked> CV (Carrier)</label>
+                    <label><input type="checkbox" name="type" value="SUB" checked> SUB (Submarine)</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Ülke</h4>
+                <div class="checkbox-group grid-2">
+                    <label><input type="checkbox" name="nation" value="Japan" checked> Japan</label>
+                    <label><input type="checkbox" name="nation" value="USA" checked> U.S.A.</label>
+                    <label><input type="checkbox" name="nation" value="Germany" checked> Germany</label>
+                    <label><input type="checkbox" name="nation" value="USSR" checked> U.S.S.R.</label>
+                    <label><input type="checkbox" name="nation" value="UK" checked> U.K.</label>
+                    <label><input type="checkbox" name="nation" value="France" checked> France</label>
+                    <label><input type="checkbox" name="nation" value="Italy" checked> Italy</label>
+                    <label><input type="checkbox" name="nation" value="Pan-Asia" checked> Pan-Asia</label>
+                    <label><input type="checkbox" name="nation" value="Other" checked> Diğer</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Seviye (Tier)</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="tier" value="11" checked> ★ (Supership)</label>
+                    <label><input type="checkbox" name="tier" value="10" checked> Tier X</label>
+                    <label><input type="checkbox" name="tier" value="9" checked> Tier IX</label>
+                    <label><input type="checkbox" name="tier" value="8" checked> Tier VIII</label>
+                    <label><input type="checkbox" name="tier" value="Other" checked> Diğer</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="apply-filters-btn" class="action-btn">Uygula ve Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD SHIP MODAL -->
+    <div id="add-ship-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ Özel Gemi Ekle</h3>
+                <span class="close-add-modal"
+                    style="color: #94a3b8; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            </div>
+
+            <div class="filter-group">
+                <div class="input-group">
+                    <label>Gemi Adı</label>
+                    <input type="text" id="new-ship-name" placeholder="Örn: Yamato B"
+                        style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                </div>
+
+                <div class="calc-grid" style="margin-bottom: 0;">
+                    <div class="input-group">
+                        <label>Hız (Speed)</label>
+                        <input type="number" id="new-ship-speed" placeholder="30"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Sınıf</label>
+                        <select id="new-ship-type"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="BB">BB (Battleship)</option>
+                            <option value="CA">CA (Cruiser)</option>
+                            <option value="DD">DD (Destroyer)</option>
+                            <option value="CV">CV (Carrier)</option>
+                            <option value="SUB">SUB (Submarine)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-grid" style="margin-bottom: 0;">
+                    <div class="input-group">
+                        <label>Ülke</label>
+                        <select id="new-ship-nation"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="Japan">Japonya</option>
+                            <option value="USA">ABD</option>
+                            <option value="Germany">Almanya</option>
+                            <option value="USSR">SSCB</option>
+                            <option value="UK">Ingiltere</option>
+                            <option value="France">Fransa</option>
+                            <option value="Italy">Italya</option>
+                            <option value="Pan-Asia">Pan-Asya</option>
+                            <option value="Other">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Seviye (Tier)</label>
+                        <select id="new-ship-tier"
+                            style="width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px;">
+                            <option value="11">★ (Supership)</option>
+                            <option value="10" selected>Tier 10</option>
+                            <option value="9">Tier 9</option>
+                            <option value="8">Tier 8</option>
+                            <option value="Other">Diğer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="save-new-ship-btn" class="action-btn">Kaydet ve Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Adding Ship -->
+    <button id="open-add-ship-btn" class="action-btn small" title="Özel Gemi Ekle"
+        style="position: fixed; bottom: 20px; right: 20px; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 999; display: flex; align-items: center; justify-content: center;">➕</button>
+
+    <script src="ships.js"></script>
+    <script src="script.js"></script>
+    <script src="visualizer-sim.js"></script>
+</body>
+
+</html>
