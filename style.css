@@ -877,7 +877,7 @@ footer {
 }
 
 /* Hide on smaller screens */
-@media (max-width: 1500px) {
+@media (max-width: 1100px) {
     .twitch-side-banner {
         display: none;
     }
