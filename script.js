@@ -98,10 +98,10 @@ const translations = {
         "label-speed": "Hız",
         "label-angle": "Açı",
         "label-flight-time": "⏱️ Uçuş Süresi:",
-        "visualizer-title": "📊 Görsel Önleme Göstergesi",
-        "interactive-mode": "İnteraktif Mod",
-        "hide-helper": "👁️ Yardımcıyı Gizle",
-        "show-helper": "👁️ Yardımcıyı Göster",
+        "visualizer-title": "📊 ATIŞ EĞİTİM EKRANI",
+        "interactive-mode": "İNTERAKTİF MOD",
+        "hide-helper": "👁️ YARDIMCIYI GİZLE",
+        "show-helper": "👁️ YARDIMCIYI GÖSTER",
         "crosshair-helper": "Kırmızı nişangah yardımcısı",
         "canvas-shoot-here": "🎯 ATEŞ ET",
         "canvas-hits": "İsabet:",
@@ -119,6 +119,22 @@ const translations = {
         "label-type": "Tip:",
         "label-velocity": "Mermi Hızı:",
         "label-max-speed": "Max Hız:",
+        "label-tier": "Seviye:",
+        // New labels for stats
+        "label-main-battery": "Ana Batarya",
+        "label-maneuverability": "Manevra",
+        "label-concealment": "Gizlilik",
+        "label-survivability": "Dayanıklılık",
+
+        // Filter Modal
+        "filter-title-class": "Gemi Sınıfı",
+        "filter-title-nation": "Ülke",
+        "filter-title-tier": "Seviye (Tier)",
+        "btn-apply-close": "Uygula ve Kapat",
+        "btn-apply-close": "Uygula ve Kapat",
+        "btn-select-all": "Seç / Kaldır",
+        "filter-other": "Diğer",
+
         "text-select-ship": "Gemini Seç",
         "text-select-target": "Düşman Seç",
         "default-option-attacker": "GEMİNİ SEÇ",
@@ -126,6 +142,7 @@ const translations = {
         "placeholder-calculating": "Hesaplanıyor...",
         "credits-pre": "Bu sayfa",
         "credits-post": "tarafından yapılmıştır. Geliştirilmeye devam etmektedir.",
+        "btn-select-all": "Seç / Kaldır",
         // SIMULATION UI
         "sim-task": "📋 GÖREV",
         "sim-distance": "🎯 Mesafe",
@@ -155,10 +172,10 @@ const translations = {
         "label-speed": "Speed",
         "label-angle": "Angle",
         "label-flight-time": "⏱️ Flight Time:",
-        "visualizer-title": "📊 Visual Lead Indicator",
-        "interactive-mode": "Interactive Mode",
-        "hide-helper": "👁️ Hide Helper",
-        "show-helper": "👁️ Show Helper",
+        "visualizer-title": "📊 VISUAL LEAD INDICATOR",
+        "interactive-mode": "INTERACTIVE MODE",
+        "hide-helper": "👁️ HIDE HELPER",
+        "show-helper": "👁️ SHOW HELPER",
         "crosshair-helper": "Red crosshair helper",
         "canvas-shoot-here": "🎯 SHOOT HERE",
         "canvas-hits": "Hits:",
@@ -176,6 +193,22 @@ const translations = {
         "label-type": "Type:",
         "label-velocity": "Shell Velocity:",
         "label-max-speed": "Max Speed:",
+        "label-tier": "Tier:",
+        // New labels for stats
+        "label-main-battery": "Main Battery",
+        "label-maneuverability": "Maneuverability",
+        "label-concealment": "Concealment",
+        "label-survivability": "Survivability",
+
+        // Filter Modal
+        "filter-title-class": "Ship Class",
+        "filter-title-nation": "Nation",
+        "filter-title-tier": "Tier",
+        "btn-apply-close": "Apply & Close",
+        "btn-apply-close": "Apply & Close",
+        "btn-select-all": "Select / Deselect",
+        "filter-other": "Other",
+
         "text-select-ship": "Select Ship",
         "text-select-target": "Select Enemy",
         "default-option-attacker": "SELECT SHIP",
@@ -183,6 +216,7 @@ const translations = {
         "placeholder-calculating": "Calculating...",
         "credits-pre": "This page was made by",
         "credits-post": ". Development is ongoing.",
+        "btn-select-all": "Select / Deselect",
         // SIMULATION UI
         "sim-task": "📋 TASK",
         "sim-distance": "🎯 Distance",
@@ -212,6 +246,14 @@ const translations = {
         "label-speed": "Velocità",
         "label-angle": "Angolo",
         "label-flight-time": "⏱️ Tempo di Volo:",
+        "visualizer-title": "📊 SCHERMO DI ADDESTRAMENTO AL TIRO",
+        "interactive-mode": "MODALITÀ INTERATTIVA",
+        "hide-helper": "👁️ NASCONDI AIUTO",
+        "show-helper": "👁️ MOSTRA AIUTO",
+        "crosshair-helper": "Aiuto mirino rosso",
+        "canvas-shoot-here": "🎯 SPARA QUI",
+        "canvas-hits": "Colpi:",
+        "canvas-ticks": "tacche",
         "result-title": "Punto di Mira:",
         "unit-seconds": "secondi",
         "unit-tick": "Tacche",
@@ -243,6 +285,19 @@ const translations = {
         "sim-misses": "Errori:",
         "btn-map": "🗺️ Mappa",
         "btn-norm": "⚓ Normale",
+        "label-survivability": "Sopravvivenza",
+        "label-main-battery": "Batteria Principale",
+        "label-maneuverability": "Manovrabilità",
+        "label-concealment": "Occultamento",
+
+        // Filter Modal
+        "filter-title-class": "Classe Nave",
+        "filter-title-nation": "Nazione",
+        "filter-title-tier": "Livello",
+        "btn-apply-close": "Applica e Chiudi",
+        "btn-select-all": "Seleziona Tutto",
+        "filter-other": "Altro",
+
         "btn-start": "Inizia",
         "btn-reset": "Resetta"
     },
@@ -291,6 +346,19 @@ const translations = {
         "sim-misses": "Fehler:",
         "btn-map": "🗺️ Karte",
         "btn-norm": "⚓ Normal",
+        "label-survivability": "Überlebensfähigkeit",
+        "label-main-battery": "Hauptbatterie",
+        "label-maneuverability": "Manövrierbarkeit",
+        "label-concealment": "Verborgenheit",
+
+        // Filter Modal
+        "filter-title-class": "Schiffsklasse",
+        "filter-title-nation": "Nation",
+        "filter-title-tier": "Stufe",
+        "btn-apply-close": "Anwenden & Schließen",
+        "btn-select-all": "Alles Auswählen",
+        "filter-other": "Andere",
+
         "btn-start": "Start",
         "btn-reset": "Reset"
     },
@@ -309,6 +377,14 @@ const translations = {
         "label-speed": "Скорость",
         "label-angle": "Угол",
         "label-flight-time": "⏱️ Время полета:",
+        "visualizer-title": "📊 ЭКРАН ТРЕНИРОВКИ СТРЕЛЬБЫ",
+        "interactive-mode": "ИНТЕРАКТИВНЫЙ РЕЖИМ",
+        "hide-helper": "👁️ СКРЫТЬ ПОМОЩНИК",
+        "show-helper": "👁️ ПОКАЗАТЬ ПОМОЩНИК",
+        "crosshair-helper": "Красный прицел помощник",
+        "canvas-shoot-here": "🎯 СТРЕЛЯЙ СЮДА",
+        "canvas-hits": "Попадания:",
+        "canvas-ticks": "делений",
         "result-title": "Точка прицеливания:",
         "unit-seconds": "секунд",
         "unit-tick": "Деления",
@@ -339,43 +415,65 @@ const translations = {
         "sim-misses": "Промахи:",
         "btn-map": "🗺️ Карта",
         "btn-norm": "⚓ Нормально",
+        "label-survivability": "Живучесть",
+        "label-main-battery": "Гл. Калибр",
+        "label-maneuverability": "Маневренность",
+        "label-concealment": "Маскировка",
+
+        // Filter Modal
+        "filter-title-class": "Категория",
+        "filter-title-nation": "Нация",
+        "filter-title-tier": "Уровень",
+        "btn-apply-close": "Применить и Закрыть",
+        "btn-select-all": "Выбрать/Снять",
+        "filter-other": "Другое",
+
         "btn-start": "Старт",
         "btn-reset": "Сброс"
     },
     ja: {
-        "app-title": "World of Warships 偏差射撃計算機",
-        "nav-calc": "偏差計算機",
-        "nav-sim": "トレーニングシミュレーション",
-        "attacker-title": "🔵 自艦",
+        "app-title": "World of Warships 照準計算機",
+        "nav-calc": "リード計算機",
+        "nav-sim": "訓練シミュレーション",
+        "attacker-title": "🔵 あなたの艦",
         "target-title": "🔴 敵艦",
-        "calc-title": "🎯 弾着時間＆偏差計算機",
-        "calc-desc": "速度、距離、角度に基づいて照準点を計算します。",
-        "label-select-ship": "自艦を選択",
-        "label-select-target": "敵艦を選択",
+        "calc-title": "🎯 砲弾飛行時間計算機",
+        "calc-desc": "艦速、距離、角度に基づいて照準点を計算します。",
+        "label-select-ship": "艦を選択",
+        "label-select-target": "敵を選択",
         "label-distance": "距離",
-        "label-scale": "スケール (照準)",
+        "label-scale": "スケール（照準器）",
         "label-speed": "速度",
         "label-angle": "角度",
-        "label-flight-time": "⏱️ 弾着時間:",
+        "label-flight-time": "⏱️ 飛行時間:",
+        "visualizer-title": "📊 射撃訓練画面",
+        "interactive-mode": "インタラクティブモード",
+        "hide-helper": "👁️ ヘルパーを非表示",
+        "show-helper": "👁️ ヘルパーを表示",
+        "crosshair-helper": "赤い照準ヘルパー",
+        "canvas-shoot-here": "🎯 ここを撃つ",
+        "canvas-hits": "命中:",
+        "canvas-ticks": "ティック",
         "result-title": "照準点:",
         "unit-seconds": "秒",
-        "unit-tick": "目盛り",
+        "unit-tick": "ティック",
         "unit-knot": "ノット",
         "btn-filter": "🔍 フィルター",
         "placeholder-search": "🔍 検索...",
-        "sim-instruction": "画面をクリックして偏差射撃！",
-        "footer-text": "WoW Aim Trainer - 教育ツール",
+        "btn-test-shot": "🧪 このショットをテスト",
+        "sim-instruction": "リードを与えて発砲するには画面をクリック！",
+        "footer-text": "WoW Aim Trainer - 訓練ツール",
         "label-nation": "国:",
-        "label-type": "艦種:",
-        "label-velocity": "初速:",
-        "label-max-speed": "最大速度:",
-        "text-select-ship": "艦船を選択",
-        "text-select-target": "敵艦を選択",
-        "default-option-attacker": "艦船を選択",
+        "label-type": "タイプ:",
+        "label-velocity": "砲弾速度:",
+        "label-max-speed": "最高速度:",
+        "text-select-ship": "艦を選択",
+        "text-select-target": "敵を選択",
+        "default-option-attacker": "艦を選択",
         "default-option-target": "敵艦を選択",
         "placeholder-calculating": "計算中...",
         "credits-pre": "このページは",
-        "credits-post": "によって作成されました。開発は継続中です。",
+        "credits-post": "によって作成されました。開発中です。",
         // SIMULATION UI
         "sim-task": "📋 ミッション",
         "sim-distance": "🎯 距離",
@@ -385,6 +483,19 @@ const translations = {
         "sim-highscore": "ベスト:",
         "sim-score": "スコア:",
         "sim-misses": "ミス:",
+        "label-survivability": "抗堪性",
+        "label-main-battery": "主砲",
+        "label-maneuverability": "機動性",
+        "label-concealment": "隠蔽性",
+
+        // Filter Modal
+        "filter-title-class": "艦種",
+        "filter-title-nation": "国家",
+        "filter-title-tier": "ティア",
+        "btn-apply-close": "適用して閉じる",
+        "btn-select-all": "すべて選択/解除",
+        "filter-other": "その他",
+
         "btn-map": "🗺️ マップモード",
         "btn-norm": "⚓ 通常モード",
         "btn-start": "開始",
@@ -405,6 +516,14 @@ const translations = {
         "label-speed": "速度",
         "label-angle": "角度",
         "label-flight-time": "⏱️ 飞行时间:",
+        "visualizer-title": "📊 射击训练屏幕",
+        "interactive-mode": "互动模式",
+        "hide-helper": "👁️ 隐藏助手",
+        "show-helper": "👁️ 显示助手",
+        "crosshair-helper": "红色准星助手",
+        "canvas-shoot-here": "🎯 在这里射击",
+        "canvas-hits": "命中:",
+        "canvas-ticks": "刻度",
         "result-title": "瞄准点:",
         "unit-seconds": "秒",
         "unit-tick": "格",
@@ -435,6 +554,19 @@ const translations = {
         "sim-misses": "失误:",
         "btn-map": "🗺️ 地图模式",
         "btn-norm": "⚓ 普通模式",
+        "label-survivability": "生存性",
+        "label-main-battery": "主炮",
+        "label-maneuverability": "机动性",
+        "label-concealment": "隐蔽性",
+
+        // Filter Modal
+        "filter-title-class": "舰艇类型",
+        "filter-title-nation": "国家",
+        "filter-title-tier": "等级",
+        "btn-apply-close": "应用并关闭",
+        "btn-select-all": "全选/取消",
+        "filter-other": "其他",
+
         "btn-start": "开始",
         "btn-reset": "重置"
     }
@@ -521,7 +653,19 @@ function populateSelectors(type) {
         const sType = ship.type;
         const sNation = ship.nation;
         const sTier = String(ship.tier);
-        const nameMatch = ship.name.toLowerCase().includes(filterText);
+
+        // Construct a "searchable text" that includes all metadata users might search for
+        // This restores the ability to search for "Tier 10", "BB", "Japan", etc. even if hidden
+        // Format: Name Tier Type Nation Caliber Velocity/Speed
+        let searchableText = `${ship.name} ${sTier} ${sType} ${sNation}`;
+        if (isAttacker) {
+            searchableText += ` ${ship.caliber || ""} ${ship.velocity}`;
+        } else {
+            searchableText += ` ${ship.speed}`;
+        }
+        searchableText = searchableText.toLowerCase();
+
+        const nameMatch = searchableText.includes(filterText);
 
         const typeMatch = selectedTypes.includes(sType);
         const nationMatch = selectedNations.includes(sNation) || (selectedNations.includes('Other') && !['Japan', 'USA', 'Germany', 'USSR', 'UK', 'France', 'Italy', 'Pan-Asia'].includes(sNation));
@@ -531,11 +675,7 @@ function populateSelectors(type) {
             seenNames.add(ship.name);
             const option = document.createElement('option');
             option.value = ship.id || ship.name;
-            if (isAttacker) {
-                option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} (${ship.caliber || "?"}) (${ship.velocity} m/s)`;
-            } else {
-                option.textContent = `[T${ship.tier} ${ship.type}] ${ship.name} - ${ship.speed} kts`;
-            }
+            option.textContent = ship.name; // Display only the ship name as requested
             selector.appendChild(option);
         }
     });
@@ -568,6 +708,17 @@ function updateShipDisplay(type, val) {
     const typeEl = isAttacker ? attackerTypeEl : targetTypeEl;
     const velEl = isAttacker ? attackerVelocityEl : null;
     const speedEl = !isAttacker ? targetMaxSpeedEl : null;
+    const tierEl = isAttacker ? document.getElementById('attacker-ship-tier') : document.getElementById('target-ship-tier');
+
+    // New Stat Elements
+    const hpEl = isAttacker ? document.getElementById('attacker-ship-hp') : document.getElementById('target-ship-hp');
+    const concealmentEl = isAttacker ? document.getElementById('attacker-ship-concealment') : document.getElementById('target-ship-concealment');
+    const reloadEl = isAttacker ? document.getElementById('attacker-ship-reload') : document.getElementById('target-ship-reload');
+    const rangeEl = isAttacker ? document.getElementById('attacker-ship-range') : document.getElementById('target-ship-range');
+    const heDmgEl = isAttacker ? document.getElementById('attacker-ship-he-dmg') : document.getElementById('target-ship-he-dmg');
+    const apDmgEl = isAttacker ? document.getElementById('attacker-ship-ap-dmg') : document.getElementById('target-ship-ap-dmg');
+    const rudderEl = isAttacker ? document.getElementById('attacker-ship-rudder') : document.getElementById('target-ship-rudder');
+    const turnEl = isAttacker ? document.getElementById('attacker-ship-turn') : document.getElementById('target-ship-turn');
 
     if (val === 'custom') {
         imgEl.style.display = 'none';
@@ -577,6 +728,12 @@ function updateShipDisplay(type, val) {
         typeEl.textContent = "-";
         if (velEl) velEl.textContent = "-";
         if (speedEl) speedEl.textContent = "-";
+        if (tierEl) tierEl.textContent = "-";
+
+        // Clear new stats
+        [hpEl, concealmentEl, reloadEl, rangeEl, heDmgEl, apDmgEl, rudderEl, turnEl].forEach(el => {
+            if (el) el.textContent = "-";
+        });
         return;
     }
 
@@ -587,6 +744,17 @@ function updateShipDisplay(type, val) {
         typeEl.textContent = ship.type;
         if (velEl) velEl.textContent = ship.velocity;
         if (speedEl) speedEl.textContent = ship.speed;
+        if (tierEl) tierEl.textContent = ship.tier;
+
+        // Populate new stats (or "-" if missing)
+        if (hpEl) hpEl.textContent = ship.hp || "-";
+        if (concealmentEl) concealmentEl.textContent = ship.concealment || "-";
+        if (reloadEl) reloadEl.textContent = ship.reload || "-";
+        if (rangeEl) rangeEl.textContent = ship.range || "-";
+        if (heDmgEl) heDmgEl.textContent = ship.he_damage || "-";
+        if (apDmgEl) apDmgEl.textContent = ship.ap_damage || "-";
+        if (rudderEl) rudderEl.textContent = ship.rudder || "-";
+        if (turnEl) turnEl.textContent = ship.turn_radius || "-";
 
         if (ship.image) {
             imgEl.src = ship.image;
@@ -616,6 +784,28 @@ function setupEventListeners() {
     closeModal.addEventListener('click', () => modal.style.display = "none");
     window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = "none"; });
     applyFiltersBtn.addEventListener('click', applyFilters);
+
+    // Filter "Select All" buttons
+    document.querySelectorAll('.select-all-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent any default action
+            console.log('Select All clicked for:', e.currentTarget.getAttribute('data-group'));
+
+            const group = e.currentTarget.getAttribute('data-group');
+            const checkboxes = document.querySelectorAll(`input[name="${group}"]`);
+
+            // NEW LOGIC REQUESTED:
+            // 1. If ANY are checked -> Deselect All.
+            // 2. Only if NONE are checked -> Select All.
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+            // If any are checked, we want to clear them (false).
+            // If none are checked, we want to select them (true).
+            const newState = !anyChecked;
+
+            checkboxes.forEach(cb => cb.checked = newState);
+        });
+    });
 
     document.querySelectorAll('input').forEach(input => {
         input.addEventListener('change', () => {
@@ -1268,7 +1458,7 @@ tabs.forEach(tab => {
     });
 });
 
-init();
+// init(); // Removed to prevent double execution
 
 // --- CUSTOM SHIP LOGIC ---
 const addShipModal = document.getElementById('add-ship-modal');
@@ -1328,4 +1518,5 @@ function loadCustomShips() {
 }
 
 initCustomShipLogic();
-window.onload = init;
+// window.onload = init; // Removed to prevent double execution
+document.addEventListener('DOMContentLoaded', init);

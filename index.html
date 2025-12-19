@@ -58,6 +58,14 @@
 
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Fix for Turkish dotted I issue in English/Other languages */
+        .filter-group h4,
+        .card h3,
+        h3[data-i18n] {
+            text-transform: none !important;
+        }
+    </style>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -152,11 +160,6 @@
                     <option value="zh">🇨🇳 ZH</option>
                 </select>
             </div>
-            <nav>
-                <button class="nav-btn active" data-tab="calculator" data-i18n="nav-calc">Önleme (Lead)
-                    Hesaplayıcı</button>
-                <button class="nav-btn" data-tab="simulation" data-i18n="nav-sim">Eğitim Simülasyonu</button>
-            </nav>
         </header>
 
         <main>
@@ -180,6 +183,59 @@
                                 <p><span class="label" data-i18n="label-velocity">Mermi Hızı:</span> <span
                                         id="attacker-ship-velocity">-</span> m/s
                                 </p>
+                                <p><span class="label" data-i18n="label-tier">Seviye:</span> <span
+                                        id="attacker-ship-tier">-</span></p>
+
+                                <div class="stats-separator"></div>
+
+                                <!-- HP & Concealment -->
+                                <div class="stats-grid">
+                                    <div class="stat-item" title="Health Points">
+                                        <span class="stat-icon">❤️</span> <span id="attacker-ship-hp">-</span>
+                                    </div>
+                                    <div class="stat-item" title="Concealment (Sea)">
+                                        <span class="stat-icon">👁️</span> <span id="attacker-ship-concealment">-</span>
+                                        km
+                                    </div>
+                                </div>
+
+                                <!-- Main Battery -->
+                                <div class="stats-section" style="margin-top: 5px;">
+                                    <h4 data-i18n="label-main-battery"
+                                        style="margin: 2px 0; font-size: 0.8rem; color: #94a3b8;">Ana Batarya</h4>
+                                    <div class="stats-grid-small">
+                                        <div class="stat-row">
+                                            <span class="stat-label">Reload:</span> <span
+                                                id="attacker-ship-reload">-</span> s
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Range:</span> <span
+                                                id="attacker-ship-range">-</span> km
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">HE:</span> <span id="attacker-ship-he-dmg">-</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">AP:</span> <span id="attacker-ship-ap-dmg">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Maneuverability -->
+                                <div class="stats-section" style="margin-top: 5px;">
+                                    <h4 data-i18n="label-maneuverability"
+                                        style="margin: 2px 0; font-size: 0.8rem; color: #94a3b8;">Manevra</h4>
+                                    <div class="stats-grid-small">
+                                        <div class="stat-row">
+                                            <span class="stat-label">Rudder:</span> <span
+                                                id="attacker-ship-rudder">-</span> s
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Turn:</span> <span id="attacker-ship-turn">-</span>
+                                            m
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -301,6 +357,58 @@
                                 <p><span class="label" data-i18n="label-max-speed">Max Hız:</span> <span
                                         id="target-ship-max-speed">-</span> <span data-i18n="unit-knot">knot</span>
                                 </p>
+                                <p><span class="label" data-i18n="label-tier">Seviye:</span> <span
+                                        id="target-ship-tier">-</span></p>
+
+                                <div class="stats-separator"></div>
+
+                                <!-- HP & Concealment -->
+                                <div class="stats-grid">
+                                    <div class="stat-item" title="Health Points">
+                                        <span class="stat-icon">❤️</span> <span id="target-ship-hp">-</span>
+                                    </div>
+                                    <div class="stat-item" title="Concealment (Sea)">
+                                        <span class="stat-icon">👁️</span> <span id="target-ship-concealment">-</span>
+                                        km
+                                    </div>
+                                </div>
+
+                                <!-- Main Battery -->
+                                <div class="stats-section" style="margin-top: 5px;">
+                                    <h4 data-i18n="label-main-battery"
+                                        style="margin: 2px 0; font-size: 0.8rem; color: #94a3b8;">Ana Batarya</h4>
+                                    <div class="stats-grid-small">
+                                        <div class="stat-row">
+                                            <span class="stat-label">Reload:</span> <span
+                                                id="target-ship-reload">-</span> s
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Range:</span> <span id="target-ship-range">-</span>
+                                            km
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">HE:</span> <span id="target-ship-he-dmg">-</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">AP:</span> <span id="target-ship-ap-dmg">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Maneuverability -->
+                                <div class="stats-section" style="margin-top: 5px;">
+                                    <h4 data-i18n="label-maneuverability"
+                                        style="margin: 2px 0; font-size: 0.8rem; color: #94a3b8;">Manevra</h4>
+                                    <div class="stats-grid-small">
+                                        <div class="stat-row">
+                                            <span class="stat-label">Rudder:</span> <span
+                                                id="target-ship-rudder">-</span> s
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Turn:</span> <span id="target-ship-turn">-</span> m
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -404,7 +512,11 @@
             </div>
 
             <div class="filter-group">
-                <h4>Gemi Sınıfı</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;" data-i18n="filter-title-class">Gemi Sınıfı</h4>
+                    <button type="button" class="action-btn small secondary select-all-btn" data-group="type"
+                        data-i18n="btn-select-all" style="padding: 2px 8px; font-size: 0.75rem;">Seç / Kaldır</button>
+                </div>
                 <div class="checkbox-group">
                     <label><input type="checkbox" name="type" value="DD" checked> DD (Destroyer)</label>
                     <label><input type="checkbox" name="type" value="CA" checked> CA/CL (Cruiser)</label>
@@ -415,7 +527,11 @@
             </div>
 
             <div class="filter-group">
-                <h4>Ülke</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;" data-i18n="filter-title-nation">Ülke</h4>
+                    <button type="button" class="action-btn small secondary select-all-btn" data-group="nation"
+                        data-i18n="btn-select-all" style="padding: 2px 8px; font-size: 0.75rem;">Seç / Kaldır</button>
+                </div>
                 <div class="checkbox-group grid-2">
                     <label><input type="checkbox" name="nation" value="Japan" checked> Japan</label>
                     <label><input type="checkbox" name="nation" value="USA" checked> U.S.A.</label>
@@ -425,23 +541,29 @@
                     <label><input type="checkbox" name="nation" value="France" checked> France</label>
                     <label><input type="checkbox" name="nation" value="Italy" checked> Italy</label>
                     <label><input type="checkbox" name="nation" value="Pan-Asia" checked> Pan-Asia</label>
-                    <label><input type="checkbox" name="nation" value="Other" checked> Diğer</label>
+                    <label><input type="checkbox" name="nation" value="Other" checked> <span
+                            data-i18n="filter-other">Diğer</span></label>
                 </div>
             </div>
 
             <div class="filter-group">
-                <h4>Seviye (Tier)</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;" data-i18n="filter-title-tier">Seviye (Tier)</h4>
+                    <button type="button" class="action-btn small secondary select-all-btn" data-group="tier"
+                        data-i18n="btn-select-all" style="padding: 2px 8px; font-size: 0.75rem;">Seç / Kaldır</button>
+                </div>
                 <div class="checkbox-group">
                     <label><input type="checkbox" name="tier" value="11" checked> ★ (Supership)</label>
                     <label><input type="checkbox" name="tier" value="10" checked> Tier X</label>
                     <label><input type="checkbox" name="tier" value="9" checked> Tier IX</label>
                     <label><input type="checkbox" name="tier" value="8" checked> Tier VIII</label>
-                    <label><input type="checkbox" name="tier" value="Other" checked> Diğer</label>
+                    <label><input type="checkbox" name="tier" value="Other" checked> <span
+                            data-i18n="filter-other">Diğer</span></label>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button id="apply-filters-btn" class="action-btn">Uygula ve Kapat</button>
+                <button id="apply-filters-btn" class="action-btn" data-i18n="btn-apply-close">Uygula ve Kapat</button>
             </div>
         </div>
     </div>
@@ -523,8 +645,8 @@
     <button id="open-add-ship-btn" class="action-btn small" title="Özel Gemi Ekle"
         style="position: fixed; bottom: 20px; right: 20px; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 999; display: flex; align-items: center; justify-content: center;">➕</button>
 
-    <script src="ships.js"></script>
-    <script src="script.js"></script>
+    <script src="ships.js?v=3.1"></script>
+    <script src="script.js?v=3.2"></script>
     <script src="visualizer-sim.js"></script>
 </body>
 

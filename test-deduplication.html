@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Deduplication Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0f172a;
+            color: white;
+        }
+
+        .result {
+            background: #1e293b;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .error {
+            border-left-color: #ef4444;
+        }
+
+        .success {
+            border-left-color: #22c55e;
+        }
+
+        pre {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Deduplication Test</h1>
+    <div id="results"></div>
+
+    <script src="ships.js?v=3.1"></script>
+    <script>
+        const results = document.getElementById('results');
+
+        function addResult(title, content, type = 'result') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<h3>${title}</h3><pre>${content}</pre>`;
+            results.appendChild(div);
+        }
+
+        // Test 1: Check if databases are loaded
+        if (typeof shipDatabase === 'undefined') {
+            addResult('❌ Error', 'shipDatabase is not defined!', 'error');
+        } else {
+            addResult('✅ Ship Database Loaded', `Total ships: ${shipDatabase.length}`, 'success');
+        }
+
+        if (typeof attackerDatabase === 'undefined') {
+            addResult('❌ Error', 'attackerDatabase is not defined!', 'error');
+        } else {
+            addResult('✅ Attacker Database Loaded', `Total ships: ${attackerDatabase.length}`, 'success');
+        }
+
+        // Test 2: Check for clone ships in shipDatabase
+        const cloneShipsInDB = shipDatabase.filter(ship => {
+            const name = ship.name;
+            return name.endsWith(' B') ||
+                name.endsWith(' CLR') ||
+                name.endsWith(' Golden') ||
+                name.startsWith('AL ') ||
+                name.startsWith('BA ') ||
+                name.startsWith('ARP ') ||
+                name.startsWith('[') ||
+                name.endsWith(' Kai') ||
+                name.match(/ \d+$/);
+        });
+
+        if (cloneShipsInDB.length > 0) {
+            addResult('❌ Clone Ships Found in shipDatabase',
+                `Found ${cloneShipsInDB.length} clone ships:\n${cloneShipsInDB.map(s => s.name).slice(0, 20).join('\n')}${cloneShipsInDB.length > 20 ? '\n...' : ''}`,
+                'error');
+        } else {
+            addResult('✅ No Clone Ships in shipDatabase', 'Deduplication working correctly!', 'success');
+        }
+
+        // Test 3: Check for clone ships in attackerDatabase
+        const cloneShipsInAttacker = attackerDatabase.filter(ship => {
+            const baseName = ship.name.replace(/ \(\d+.*?\)/g, '').trim();
+            return baseName.endsWith(' B') ||
+                baseName.endsWith(' CLR') ||
+                baseName.endsWith(' Golden') ||
+                baseName.startsWith('AL ') ||
+                baseName.startsWith('BA ') ||
+                baseName.startsWith('ARP ') ||
+                baseName.startsWith('[') ||
+                baseName.endsWith(' Kai') ||
+                baseName.match(/ \d+$/);
+        });
+
+        if (cloneShipsInAttacker.length > 0) {
+            addResult('❌ Clone Ships Found in attackerDatabase',
+                `Found ${cloneShipsInAttacker.length} clone ships:\n${cloneShipsInAttacker.map(s => s.name).slice(0, 20).join('\n')}${cloneShipsInAttacker.length > 20 ? '\n...' : ''}`,
+                'error');
+        } else {
+            addResult('✅ No Clone Ships in attackerDatabase', 'Deduplication working correctly!', 'success');
+        }
+
+        // Test 4: Search for specific ships
+        const yamatoShips = attackerDatabase.filter(s => s.name.includes('Yamato'));
+        addResult('🔍 Yamato Ships Found',
+            yamatoShips.length > 0 ? yamatoShips.map(s => s.name).join('\n') : 'No Yamato ships found',
+            yamatoShips.length === 1 ? 'success' : 'error');
+    </script>
+</body>
+
+</html>

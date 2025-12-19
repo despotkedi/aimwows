@@ -5,7 +5,10 @@ let vizState = {
     shells: [],
     lastTime: 0,
     animationId: null,
-    showLeadIndicator: true // Toggle for lead indicator visibility
+    showLeadIndicator: true, // Toggle for lead indicator visibility
+    mouseX: 0, // Mouse X position
+    mouseY: 0, // Mouse Y position
+    showCrosshair: true // Show mouse crosshair
 };
 
 const vizStartBtn = document.getElementById('viz-start-btn');
@@ -172,6 +175,48 @@ function drawLeadIndicator() {
     vizCtx.fillText(`${leadTicks.toFixed(1)} ${ticksText}`, leadX, leadY + 65);
 }
 
+function drawMouseCrosshair() {
+    if (!vizState.showCrosshair || !vizState.ship) return;
+
+    const centerY = vizCanvas.height / 2;
+    const mouseX = vizState.mouseX;
+    const pxPerTick = 15;
+
+    // Calculate tick distance from ship to mouse
+    const distancePx = mouseX - vizState.ship.x;
+    const distanceTicks = distancePx / pxPerTick;
+
+    // Draw green crosshair at mouse position
+    vizCtx.strokeStyle = '#00ff00'; // Bright green
+    vizCtx.lineWidth = 2;
+
+    // Vertical line
+    vizCtx.beginPath();
+    vizCtx.moveTo(mouseX, centerY - 35);
+    vizCtx.lineTo(mouseX, centerY + 35);
+    vizCtx.stroke();
+
+    // Horizontal line
+    vizCtx.beginPath();
+    vizCtx.moveTo(mouseX - 35, centerY);
+    vizCtx.lineTo(mouseX + 35, centerY);
+    vizCtx.stroke();
+
+    // Circle around center
+    vizCtx.beginPath();
+    vizCtx.arc(mouseX, centerY, 20, 0, Math.PI * 2);
+    vizCtx.stroke();
+
+    // Show tick distance above crosshair
+    vizCtx.font = 'bold 16px Arial';
+    vizCtx.textAlign = 'center';
+    vizCtx.fillStyle = '#00ff00';
+    vizCtx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    vizCtx.lineWidth = 3;
+    vizCtx.strokeText(`${distanceTicks.toFixed(1)} ticks`, mouseX, centerY - 45);
+    vizCtx.fillText(`${distanceTicks.toFixed(1)} ticks`, mouseX, centerY - 45);
+}
+
 function drawVisualizerShip() {
     if (!vizState.ship) return;
 
@@ -274,16 +319,23 @@ function updateVisualizerSimulation(dt) {
             const hitDist = Math.abs(shell.targetX - vizState.ship.x);
             const isHit = hitDist < 60; // Increased hit radius
 
+            // Calculate accuracy - how far off from perfect lead
+            const leadTicks = parseFloat(document.getElementById('result-value').textContent) || 0;
+            const pxPerTick = 15;
+            const perfectX = vizState.ship.x + (leadTicks * pxPerTick);
+            const aimError = Math.abs(shell.targetX - perfectX) / pxPerTick;
+
             if (isHit) {
                 // Hit!
                 createVisualizerExplosion(shell.targetX, shell.targetY, true);
-                createHitText(shell.targetX, shell.targetY, "HIT!", true);
+                const errorText = aimError < 0.5 ? "PERFECT!" : `${aimError.toFixed(1)}t off`;
+                createHitText(shell.targetX, shell.targetY, `HIT! (${errorText})`, true);
                 if (!vizState.hits) vizState.hits = 0;
                 vizState.hits++; // Increment hit counter
             } else {
                 // Miss
                 createVisualizerExplosion(shell.targetX, shell.targetY, false);
-                createHitText(shell.targetX, shell.targetY, "MISS", false);
+                createHitText(shell.targetX, shell.targetY, `MISS (${aimError.toFixed(1)}t off)`, false);
             }
             vizState.shells.splice(i, 1);
         } else {
@@ -409,6 +461,7 @@ function visualizerLoop(currentTime) {
     updateVisualizerSimulation(dt);
     drawVisualizerShip();
     drawLeadIndicator(); // Draw moving lead indicator
+    drawMouseCrosshair(); // Draw mouse crosshair (green)
     drawVisualizerShells();
     drawVisualizerExplosions();
     drawHitTexts(); // Draw hit/miss text
@@ -516,23 +569,28 @@ if (toggleLeadBtn) {
 }
 
 if (vizCanvas) {
-    vizCanvas.addEventListener('click', (e) => {
-        if (!vizState.running || !vizState.ship) return;
-
+    // Track mouse position
+    vizCanvas.addEventListener('mousemove', (e) => {
         const rect = vizCanvas.getBoundingClientRect();
         const scaleX = vizCanvas.width / rect.width;
         const scaleY = vizCanvas.height / rect.height;
-        const clickX = (e.clientX - rect.left) * scaleX;
-        const clickY = (e.clientY - rect.top) * scaleY;
+
+        vizState.mouseX = (e.clientX - rect.left) * scaleX;
+        vizState.mouseY = (e.clientY - rect.top) * scaleY;
+    });
+
+    // Fire shell at mouse position (crosshair)
+    vizCanvas.addEventListener('click', (e) => {
+        if (!vizState.running || !vizState.ship) return;
 
         const flightTime = parseFloat(flightTimeInput.value) || 8;
         const centerY = vizCanvas.height / 2;
 
-        // Fire shell
+        // Fire shell at mouse crosshair position
         vizState.shells.push({
             startX: vizCanvas.width / 2,
             startY: centerY - 30,
-            targetX: clickX,
+            targetX: vizState.mouseX, // Use mouse position instead of click position
             targetY: centerY,
             x: vizCanvas.width / 2,
             y: centerY - 30,
